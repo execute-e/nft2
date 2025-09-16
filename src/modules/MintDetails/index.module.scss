@@ -1,0 +1,73 @@
+@use '../../styles/helpers' as *;
+
+.mintDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: rem(160);
+  row-gap: rem(40);
+
+  @include laptop {
+    margin-top: rem(120);
+    row-gap: rem(32);
+  }
+
+  @include tablet {
+    margin-top: rem(100);
+    row-gap: rem(28);
+  }
+
+  @include mobile-l {
+    margin-top: rem(80);
+  }
+}
+
+.title {
+	@include fluid-text(70, 45);
+	@include title-style;
+	text-align: center;
+}
+
+li {
+  all: unset;
+}
+
+.cardInfo {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: rem(20);
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile-l {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cardItem {
+  background-color: var(--color-purple);
+  border-radius: rem(8);
+  padding: rem(24);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: rem(8);
+  text-align: center;
+}
+
+.cardTitle {
+	@include title-style;
+  font-size: rem(32);
+  text-align: center;
+  color: var(--color-white);
+}
+
+.cardText {
+  color: var(--color-white);
+  font-size: rem(20);
+}
+

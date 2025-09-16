@@ -1,0 +1,141 @@
+@use '../../styles/helpers' as *;
+
+.burgerMenu {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 150;
+    transform: translateY(-110%);
+    transition: transform 0.3s;
+    row-gap: rem(16);
+    border-radius: 0 0 rem(20) rem(20);
+    padding: rem(12) rem(40) rem(56) rem(40);
+
+    @include tablet {
+        padding-bottom: rem(30);
+    }
+}
+
+.active {
+    transform: translateY(0);
+}
+
+.title {
+    @include fluid-text(160, 60);
+    font-weight: 400;
+    color: var(--color-pink);
+    font-family: var(--font-family-accent);
+    letter-spacing: 0;
+    line-height: 1;
+    text-transform: uppercase;
+    text-align: center;
+
+    &Overlay {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: rem(8);
+    }
+}
+
+.nav {
+    width: 100%;
+    text-align: center;
+}
+
+.list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: rem(35);
+    flex-wrap: wrap;
+
+    @include mobile-l {
+        flex-direction: column;
+        row-gap: rem(20);
+    }
+}
+
+.link {
+    height: 100%;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    &:not(:last-child) {
+        &::after {
+            display: inline-block;
+            content: "";
+            background-color: var(--color-pink);
+            width: rem(5);
+            height: rem(5);
+            rotate: 45deg;
+            margin-left: rem(30);
+
+            @include mobile-l {
+                margin-left: 0;
+                position: absolute;
+                left: 50%;
+                bottom: -50%;
+                translate: -50%;
+            }
+        }
+    }
+}
+
+.button {
+    position: absolute;
+    bottom: -10%;
+    right: 5%;
+    width: rem(58);
+    height: rem(58);
+    border-radius: 50%;
+    background: var(--color-black);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include hover {
+        .buttonIcon {
+            opacity: 0.7;
+        }
+    }
+
+    &Icon {
+        width: rem(36);
+        height: rem(36);
+        border: rem(2) solid var(--color-pink);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: opacity 0.2s;
+    }
+
+    &Line {
+        position: absolute;
+        width: rem(20);
+        height: rem(2);
+        background-color: var(--color-pink);
+        display: inline-block;
+
+        &:first-child {
+            rotate: 45deg;
+        }
+
+        &:last-child {
+            rotate: -45deg;
+        }
+    }
+}

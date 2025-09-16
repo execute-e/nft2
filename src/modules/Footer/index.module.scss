@@ -1,0 +1,142 @@
+@use '../../styles/helpers' as *;
+
+.footer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include mobile-l {
+        padding-inline: 0;
+    }
+}
+
+.emptyLine {
+    height: rem(130);
+    width: 100%;
+
+    @include laptop {
+        height: rem(100);
+    }
+
+    @include tablet {
+        height: rem(92.5);
+    }
+
+    @include mobile-l {
+        height: rem(55);
+    }
+}
+
+.bg {
+    width: 100%;
+    height: rem(720);
+    background: url('./images/bg.jpg') no-repeat center/cover;
+    border-radius: rem(30);
+
+    @include laptop {
+        height: rem(480);
+    }
+
+    @include mobile-l {
+        border-radius: 0;
+        height: rem(232);
+    }
+}
+
+.icon {
+    position: absolute;
+    padding: rem(10);
+    background-color: var(--bgc);
+    border-radius: 50%;
+
+    @include mobile-l {
+        top: -5%;
+    }
+}
+
+.iconImage {
+    border-radius: 50%;
+    width: rem(260);
+    height: rem(260);
+
+    @include laptop {
+        width: rem(200);
+        height: rem(200);
+    }
+
+    @include tablet {
+        width: rem(185);
+        height: rem(185);
+    }
+
+    @include mobile-l {
+        width: rem(110);
+        height: rem(110);
+    }
+}
+
+.skateboard {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    translate: -50%; 
+    width: rem(1200);
+    height: rem(250);
+    background: url('./images/skate.png') no-repeat center/contain ;
+
+    @include laptop {
+        width: rem(740);
+        height: rem(154);
+        bottom: 3%;
+    }
+
+    @include tablet {
+        width: rem(600);
+        height: rem(125);
+        bottom: 5%;
+    }
+
+    @include mobile-l {
+        width: rem(320);
+        height: rem(67);
+    }
+}
+
+.soc1als {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: -50%;
+    right: 0;
+    left: 0;
+
+    @include tablet {
+        top: -55%;
+    }
+}
+
+.image {
+    width: rem(280);
+    height: rem(280);
+    transition: transform 0.2s;
+
+    @include hover {
+        transform: translateY(#{rem(-10)});
+    }
+
+    @include laptop {
+        width: rem(180);
+        height: rem(180);
+    }
+
+    @include tablet {
+        width: rem(150);
+        height: rem(150);
+    }
+
+    @include mobile-l {
+        width: rem(80);
+        height: rem(80);
+    }
+}

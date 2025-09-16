@@ -1,0 +1,80 @@
+@use '../../styles/helpers' as *;
+
+.ourTeam {
+	margin-top: rem(120);
+	text-align: center;
+
+	@include tablet {
+		margin-top: rem(100);
+	}
+
+	@include mobile-l {
+		margin-top: rem(80);
+	}
+}
+
+.title {
+	@include fluid-text(70, 45);
+	font-weight: 400;
+	color: var(--color-pink);
+	font-family: var(--font-family-accent);
+	letter-spacing: 0;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.teamMembers {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: rem(20);
+	margin-top: rem(60);
+
+	@include mobile-l {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.member {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	&Info {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
+}
+
+.photo {
+	width: rem(280);
+	height: rem(280);
+
+	@include laptop {
+		width: rem(240);
+		height: rem(240);
+	}
+
+	@include tablet {
+		width: rem(157);
+		height: rem(157);
+	}
+}
+
+.name {
+	@include fluid-text(32, 20);
+	font-weight: 400;
+	color: var(--color-pink);
+	font-family: var(--font-family-accent);
+	letter-spacing: 0;
+	line-height: 1;
+	text-transform: uppercase;
+  margin-top: rem(16);
+  margin-bottom: rem(4);
+}
+
+.role {
+	font-size: rem(16);
+	color: var(--color-gray);
+  font-weight: 400;
+}

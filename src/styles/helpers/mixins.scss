@@ -1,0 +1,28 @@
+@use 'sass:math';
+@use 'functions' as *;
+
+@mixin fluid-text($max: 48, $min: 16, $isImportant: false) {
+	font-size: fluid($max, $min) if($isImportant, !important, null);
+}
+
+@mixin visually-hidden {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	margin: -1px !important;
+	border: 0 !important;
+	padding: 0 !important;
+	white-space: nowrap !important;
+	clip-path: inset(100%) !important;
+	clip: rect(0 0 0 0) !important;
+	overflow: hidden !important;
+}
+
+@mixin title-style {
+	font-weight: 400;
+	color: var(--color-pink);
+	font-family: var(--font-family-accent);
+	letter-spacing: 0;
+	line-height: 1;
+	text-transform: uppercase;
+}

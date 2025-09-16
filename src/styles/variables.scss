@@ -1,0 +1,18 @@
+@use './helpers' as *;
+
+:root {
+    --color-pink: #EE6D83;
+    --color-purple: #99A2FF;
+    --color-black: #2C2A2A;
+    --color-black-80: #2C2A2ACC;
+    --bgc: #FEF3F7;
+    --color-white: #FFFFFF;
+
+    --font-family-base: 'Montserrat', sans-serif;
+    --font-family-accent: 'ProtestRiot', sans-serif;
+
+    --container-width: #{rem(1872)};
+    --container-padding-x: #{rem(24)};
+
+    --transition-duration: 0.2s;
+}
