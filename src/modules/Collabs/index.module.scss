@@ -36,6 +36,7 @@
 	width: max-content;
 	will-change: transform;
 	transform: translateZ(0);
+	padding-bottom: rem(25);
 }
 
 .carousel {
@@ -47,9 +48,12 @@
 	pointer-events: auto;
 }
 
+.collab img {
+	transition: transform 0.3s ease;
+}
+
 .collab a:hover .image {
 	transform: scale(1.05) translateZ(0);
-	transition: transform 0.3s ease;
 }
 
 .image {
