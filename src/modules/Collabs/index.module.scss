@@ -1,58 +1,79 @@
 @use '../../styles/helpers' as *;
 
 .section {
-    overflow-x: hidden;
-    margin-bottom: rem(80);
+	overflow-x: hidden;
+	margin-bottom: rem(80);
 
-    @include laptop {
-        margin-bottom: rem(60);
-    }
+	@include laptop {
+		margin-bottom: rem(60);
+	}
 
-    @include tablet {
-        margin-bottom: rem(100);
-    }
+	@include tablet {
+		margin-bottom: rem(100);
+	}
 
-    @include mobile-l {
-        margin-bottom: rem(60);
-    }
+	@include mobile-l {
+		margin-bottom: rem(60);
+	}
 }
 
 .inner {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    row-gap: rem(30);
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	row-gap: rem(30);
 }
 
 .title {
-    @include title-style;
-    @include fluid-text(65, 45);
-    width: 100%;
+	@include title-style;
+	@include fluid-text(65, 45);
+	width: 100%;
 }
 
 .carousel {
-    display: flex;
-    column-gap: rem(40);
-    width: max-content;
+	display: flex;
+	column-gap: rem(40);
+	width: max-content;
+	will-change: transform;
+	transform: translateZ(0);
+}
+
+.carousel {
+	pointer-events: none;
+}
+
+.collab a,
+.collab img {
+	pointer-events: auto;
+}
+
+.collab a:hover .image {
+	transform: scale(1.05) translateZ(0);
+	transition: transform 0.3s ease;
 }
 
 .image {
-    width: rem(260);
-    height: rem(260);
-    flex-shrink: 0;
-    border-radius: rem(20);
+	width: rem(260);
+	height: rem(260);
+	flex-shrink: 0;
+	border-radius: rem(20);
+	will-change: transform;
+	transform: translateZ(0);
+	backface-visibility: hidden;
 
-    @include tablet {
-        width: rem(160);
-        height: rem(160);
-    }
+	@include tablet {
+		width: rem(160);
+		height: rem(160);
+	}
 
-    @include mobile-l {
-        width: rem(100);
-        height: rem(100);
-    }
+	@include mobile-l {
+		width: rem(100);
+		height: rem(100);
+	}
 }
 
 .collab {
-    flex-shrink: 0;
+	flex-shrink: 0;
+	will-change: transform;
+	transform: translateZ(0);
 }
