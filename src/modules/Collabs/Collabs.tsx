@@ -66,7 +66,7 @@ const Collabs: React.FC = () => {
           onTransitionEnd={handleTransitionEnd}
           style={{
             transform: `translateX(${translatedValue}px)`,
-            transition: isAnimating ? "transform 20s linear" : "none",
+            transition: isAnimating ? "transform 40s linear" : "none",
           }}
           ref={carousel}
         >
