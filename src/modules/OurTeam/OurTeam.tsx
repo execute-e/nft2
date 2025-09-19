@@ -12,95 +12,123 @@ const OurTeam: React.FC = () => {
 			<h2 className={styles.title}>Our Team</h2>
 			<ul className={styles.teamMembers}>
 				<li className={styles.member}>
-					<FadeContent>
-						<AnimatedContent
-							distance={150}
-							direction='vertical'
-							reverse={false}
-							duration={1.2}
-							ease='bounce.out'
-							initialOpacity={0.2}
-							animateOpacity
-							scale={1.1}
-							threshold={0.2}
-							delay={0.1}
-						>
-							<img className={styles.photo} src={first} />
-							<div className={styles.memberInfo}>
-								<h3 className={styles.name}>CABURUS</h3>
-								<p className={styles.role}>Founder / Artist</p>
-							</div>
-						</AnimatedContent>
-					</FadeContent>
+					<a
+						href='https://x.com/LitePlay2'
+						target='_blank'
+						rel='noreferrer'
+						className={styles.link}
+					>
+						<FadeContent>
+							<AnimatedContent
+								distance={150}
+								direction='vertical'
+								reverse={false}
+								duration={1.2}
+								ease='bounce.out'
+								initialOpacity={0.2}
+								animateOpacity
+								scale={1.1}
+								threshold={0.2}
+								delay={0.1}
+							>
+								<img className={styles.photo} src={first} />
+								<div className={styles.memberInfo}>
+									<h3 className={styles.name}>CABURUS</h3>
+									<p className={styles.role}>Founder / Artist</p>
+								</div>
+							</AnimatedContent>
+						</FadeContent>
+					</a>
 				</li>
 
 				<li className={styles.member}>
-					<FadeContent>
-					<AnimatedContent
-						distance={150}
-						direction='vertical'
-						reverse={false}
-						duration={1.2}
-						ease='bounce.out'
-						initialOpacity={0.2}
-						animateOpacity
-						scale={1.1}
-						threshold={0.2}
-						delay={0.3}
+					<a
+						href='https://x.com/sekret_off'
+						target='_blank'
+						rel='noreferrer'
+						className={styles.link}
 					>
-						<img className={styles.photo} src={second} />
-						<div className={styles.memberInfo}>
-							<h3 className={styles.name}>Gabrielsosa</h3>
-							<p className={styles.role}>Co - Founder / CM</p>
-						</div>
-					</AnimatedContent>
-          </FadeContent>
+						<FadeContent>
+							<AnimatedContent
+								distance={150}
+								direction='vertical'
+								reverse={false}
+								duration={1.2}
+								ease='bounce.out'
+								initialOpacity={0.2}
+								animateOpacity
+								scale={1.1}
+								threshold={0.2}
+								delay={0.3}
+							>
+								<img className={styles.photo} src={second} />
+								<div className={styles.memberInfo}>
+									<h3 className={styles.name}>Gabrielsosa</h3>
+									<p className={styles.role}>Co - Founder / CM</p>
+								</div>
+							</AnimatedContent>
+						</FadeContent>
+					</a>
 				</li>
 
 				<li className={styles.member}>
-					<FadeContent>
-					<AnimatedContent
-						distance={150}
-						direction='vertical'
-						reverse={false}
-						duration={1.2}
-						ease='bounce.out'
-						initialOpacity={0.2}
-						animateOpacity
-						scale={1.1}
-						threshold={0.2}
-						delay={0.5}
+					<a
+						href='https://x.com/kasyak0'
+						target='_blank'
+						rel='noreferrer'
+						className={styles.link}
 					>
-						<img className={styles.photo} src={third} />
-						<div className={styles.memberInfo}>
-							<h3 className={styles.name}>KASYAK</h3>
-							<p className={styles.role}>Team / Mod</p>
-						</div>
-					</AnimatedContent>
-          </FadeContent>
+						<FadeContent>
+							<AnimatedContent
+								distance={150}
+								direction='vertical'
+								reverse={false}
+								duration={1.2}
+								ease='bounce.out'
+								initialOpacity={0.2}
+								animateOpacity
+								scale={1.1}
+								threshold={0.2}
+								delay={0.5}
+							>
+								<img className={styles.photo} src={third} />
+								<div className={styles.memberInfo}>
+									<h3 className={styles.name}>KASYAK</h3>
+									<p className={styles.role}>Team / Mod</p>
+								</div>
+							</AnimatedContent>
+						</FadeContent>
+					</a>
 				</li>
 
 				<li className={styles.member}>
-					<FadeContent>
-					<AnimatedContent
-						distance={150}
-						direction='vertical'
-						reverse={false}
-						duration={1.2}
-						ease='bounce.out'
-						initialOpacity={0.2}
-						animateOpacity
-						scale={1.1}
-						threshold={0.2}
-						delay={0.7}
+					<a
+						href='https://x.com/0xRabit'
+						target='_blank'
+						rel='noreferrer'
+						className={styles.link}
 					>
-						<img className={styles.photo} src={fourth} />
-						<div className={styles.memberInfo}>
-							<h3 className={styles.name}>Elisalim</h3>
-							<p className={styles.role}>Team / Mod</p>
-						</div>
-					</AnimatedContent>
-          </FadeContent>
+						<FadeContent>
+							<AnimatedContent
+								distance={150}
+								direction='vertical'
+								reverse={false}
+								duration={1.2}
+								ease='bounce.out'
+								initialOpacity={0.2}
+								animateOpacity
+								scale={1.1}
+								threshold={0.2}
+								delay={0.7}
+							>
+								<img className={styles.photo} src={fourth} />
+								<div className={styles.memberInfo}>
+									<h3 className={styles.name}>Elisalim</h3>
+									<p className={styles.role}>Team / Mod</p>
+								</div>
+							</AnimatedContent>
+						</FadeContent>
+					</a>
 				</li>
 			</ul>
 		</section>

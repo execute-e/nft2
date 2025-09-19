@@ -11,51 +11,63 @@ const Footer: React.FC = () => {
 		<footer className={`container ${styles.footer}`}>
 			<div className={styles.emptyLine}></div>
 			<div className={styles.bg}>
-				<div className={styles.skateboard}>
-					<ul className={styles.soc1als}>
-						<li className={styles.item}>
-							<FadeContent>
-								<a href='/' target='_blank' className={styles.link}>
-									<img
-										src={first}
-										alt=''
-										className={styles.image}
-										loading='lazy'
-										decoding='async'
-									/>
-								</a>
-							</FadeContent>
-						</li>
-						<li className={styles.item}>
-							<FadeContent>
-								<a href='/' target='_blank' className={styles.link}>
-									<img
-										src={second}
-										alt=''
-										className={styles.image}
-										loading='lazy'
-										decoding='async'
-									/>
-								</a>
-							</FadeContent>
-						</li>
-						<li className={styles.item}>
-							<FadeContent>
-								<a href='/' target='_blank' className={styles.link}>
-									<img
-										src={third}
-										alt=''
-										className={styles.image}
-										loading='lazy'
-										decoding='async'
-									/>
-								</a>
-							</FadeContent>
-						</li>
-					</ul>
-				</div>
+					<div className={styles.skateboard}>
+						<ul className={styles.soc1als}>
+							<li className={styles.item}>
+								<FadeContent>
+									<a
+										href='https://magiceden.io/collections/monad-testnet/0xaf1077066c35dc03b079881c51d4f5f8c25ade65'
+										target='_blank'
+										className={styles.link}
+									>
+										<img
+											src={first}
+											alt=''
+											className={styles.image}
+											loading='lazy'
+											decoding='async'
+										/>
+									</a>
+								</FadeContent>
+							</li>
+							<li className={styles.item}>
+								<FadeContent>
+									<a
+										href='https://x.com/the_monicorns'
+										target='_blank'
+										className={styles.link}
+									>
+										<img
+											src={second}
+											alt=''
+											className={styles.image}
+											loading='lazy'
+											decoding='async'
+										/>
+									</a>
+								</FadeContent>
+							</li>
+							<li className={styles.item}>
+								<FadeContent>
+									<a
+										href='https://discord.gg/the-monicorns'
+										target='_blank'
+										className={styles.link}
+									>
+										<img
+											src={third}
+											alt=''
+											className={styles.image}
+											loading='lazy'
+											decoding='async'
+										/>
+									</a>
+								</FadeContent>
+							</li>
+						</ul>
+					</div>
 			</div>
- 			<div className={styles.icon}>
+			<div className={styles.icon}>
 				<img
 					src={logo}
 					alt=''

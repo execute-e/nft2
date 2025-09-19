@@ -148,7 +148,7 @@ const Header: React.FC = () => {
 				</nav>
 				<div className={styles.buttonOverlay}>
 					<Magnet padding={50} disabled={false} magnetStrength={15}>
-						<button className={styles.button}>Check eligable</button>
+						<button className={styles.button}>Play Game!</button>
 					</Magnet>
 					<button
 						className={styles.burgerButton}
