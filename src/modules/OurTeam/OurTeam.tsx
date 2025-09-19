@@ -46,7 +46,7 @@ const OurTeam: React.FC = () => {
 						animateOpacity
 						scale={1.1}
 						threshold={0.2}
-						delay={0.1}
+						delay={0.3}
 					>
 						<img className={styles.photo} src={second} />
 						<div className={styles.memberInfo}>
@@ -69,7 +69,7 @@ const OurTeam: React.FC = () => {
 						animateOpacity
 						scale={1.1}
 						threshold={0.2}
-						delay={0.1}
+						delay={0.5}
 					>
 						<img className={styles.photo} src={third} />
 						<div className={styles.memberInfo}>
@@ -92,7 +92,7 @@ const OurTeam: React.FC = () => {
 						animateOpacity
 						scale={1.1}
 						threshold={0.2}
-						delay={0.1}
+						delay={0.7}
 					>
 						<img className={styles.photo} src={fourth} />
 						<div className={styles.memberInfo}>
