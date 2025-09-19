@@ -22,6 +22,7 @@
 
 .loreBg {
 	width: 100%;
+	border-radius: 4%;
 
 	@include mobile-l {
 		display: none;

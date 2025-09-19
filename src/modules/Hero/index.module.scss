@@ -1,89 +1,89 @@
 @use '../../styles/helpers' as *;
 
 .hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
 
-    @include mobile-l {
-        padding-inline: 0;
-    }
+	@include mobile-l {
+		padding-inline: 0;
+	}
 }
 
 .image {
-    width: 100%;
-    height: rem(920);
-    display: flex;
-    height: rem(920);
-    background: url(./images/hero.jpg) no-repeat center/cover;
-    border-radius: rem(20);
-    margin-bottom: rem(36);
-    margin-inline: auto;
+	width: 100%;
+	height: rem(920);
+	display: flex;
+	height: rem(920);
+	background: url(./images/hero.jpg) no-repeat center/cover;
+	border-radius: rem(20);
+	margin-bottom: rem(36);
+	margin-inline: auto;
 
-    @include laptop {
-        height: rem(615);
-    }
+	@include laptop {
+		height: rem(615);
+	}
 
-    @include tablet {
-        background-size: cover;
-    }
+	@include tablet {
+		background-size: cover;
+	}
 
-    @include mobile-l {
-        height: rem(540);
-        border-radius: 0;
-        background-position: 25%;
-    }
+	@include mobile-l {
+		height: rem(540);
+		border-radius: 0;
+		background-position: 25%;
+	}
 }
 
 .info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: rem(20);
-    max-width: rem(1660);
-    width: 100%;
-    text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: rem(20);
+	max-width: rem(1660);
+	width: 100%;
+	text-align: center;
 }
 
 .titleGroup {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: rem(16);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: rem(16);
 }
 
 .title {
-    @include fluid-text(160, 60);
-    font-weight: 400;
-    color: var(--color-pink);
-    font-family: var(--font-family-accent);
-    letter-spacing: 0;
-    line-height: 1;
-    text-transform: uppercase;
+	@include fluid-text(160, 60);
+	font-weight: 400;
+	color: var(--color-pink);
+	font-family: var(--font-family-accent);
+	letter-spacing: 0;
+	line-height: 1;
+	text-transform: uppercase;
 }
 
 .text {
-    max-width: rem(1100);
+	max-width: rem(1100);
 }
 
 .button {
-    font-family: var(--font-family-accent);
-    font-weight: 800;
-    color: var(--color-white);
-    background-color: var(--color-pink);
-    padding: rem(8);
-    border-radius: rem(24);
-    border: none;
-    font-size: rem(20);
-    width: 90%;
+	font-family: var(--font-family-accent);
+	font-weight: 800;
+	color: var(--color-white);
+	background-color: var(--color-pink);
+	padding: rem(8);
+	border-radius: rem(24);
+	border: none;
+	font-size: rem(20);
+	width: 90%;
 
-    @include hover {
-        background-color: #F8A0C5;
-        color: #EE6D83;
-    }
+	@include hover {
+		background-color: #f8a0c5;
+		color: #ee6d83;
+	}
 
-    @include mobile-l-above {
-        display: none;
-    }
+	@include mobile-l-above {
+		display: none;
+	}
 }
