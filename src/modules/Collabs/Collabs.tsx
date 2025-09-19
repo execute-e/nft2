@@ -18,15 +18,17 @@ const Collabs: React.FC = () => {
     setTranslatedValue(translateWidth);
   }, [collabWidth]);
 
-  const handleTransitionEnd = () => {
-    setAnimating(false);
-    setTranslatedValue(0);
+  const handleTransitionEnd = (e: React.TransitionEvent<HTMLUListElement>) => {
+    if (e.target === e.currentTarget) {
+      setAnimating(false);
+      setTranslatedValue(0);
 
-    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        setAnimating(true);
+        requestAnimationFrame(() => {
+          setAnimating(true);
+        });
       });
-    });
+    }
   };
 
   useEffect(() => {
@@ -63,208 +65,340 @@ const Collabs: React.FC = () => {
           className={styles.carousel}
           onTransitionEnd={handleTransitionEnd}
           style={{
-            translate: `${translatedValue}px`,
-            transition: isAnimating ? "translate 20s linear" : "none",
+            transform: `translateX(${translatedValue}px)`,
+            transition: isAnimating ? "transform 40s linear" : "none",
           }}
           ref={carousel}
         >
           <li className={styles.collab}>
-            <img
-              src={Images.one}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/RealNadsClub"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.one}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.two}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/NadDomains"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.two}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.three}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/sealuminati"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.three}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.four}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/slmndNFT"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.four}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.five}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/mongang_xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.five}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.six}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/JikunaNft"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.six}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.seven}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/monuki_xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.seven}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.eight}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/monadverse"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.eight}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.nine}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/ChogNFT"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.nine}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.ten}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/the10kSquad"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.ten}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.eleven}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/DripsterNFT"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.eleven}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.one}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/RealNadsClub"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.one}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.two}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/NadDomains"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.two}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.three}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/sealuminati"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.three}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.four}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/slmndNFT"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.four}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.five}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/mongang_xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.five}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.six}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/JikunaNft"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.six}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.seven}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/monuki_xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.seven}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.eight}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/monadverse"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.eight}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.nine}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/ChogNFT"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.nine}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.ten}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/the10kSquad"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.ten}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
           <li className={styles.collab}>
-            <img
-              src={Images.eleven}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-              decoding="async"
-            />
+            <a
+              href="https://x.com/DripsterNFT"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Images.eleven}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
           </li>
         </ul>
       </div>
