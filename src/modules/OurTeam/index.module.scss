@@ -43,11 +43,16 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	transition: transform 0.3s ease;
 
 	&Info {
 		display: flex;
 		flex-direction: column;
 		text-align: center;
+	}
+
+	&:hover {
+		transform: scale(1.05) translateZ(0);
 	}
 }
 
@@ -74,12 +79,12 @@
 	letter-spacing: 0;
 	line-height: 1;
 	text-transform: uppercase;
-  margin-top: rem(16);
-  margin-bottom: rem(4);
+	margin-top: rem(16);
+	margin-bottom: rem(4);
 }
 
 .role {
 	font-size: rem(16);
 	color: var(--color-gray);
-  font-weight: 400;
+	font-weight: 400;
 }
