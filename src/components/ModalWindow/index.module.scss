@@ -1,0 +1,49 @@
+@use '../../styles/helpers' as *;
+
+.modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	translate: -50% -50%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: rem(12);
+	display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 0 0 100vmax #00000030;
+	z-index: 100;
+	width: 30%;
+
+	&[open] {
+        opacity: 1;
+        visibility: visible;
+    }
+
+	&::backdrop {
+        background: #00000000;
+    }
+}
+
+.inner {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--color-purple);
+	color: var(--color-white);
+	padding: rem(20);
+}
+
+.modalClose {
+	position: absolute;
+	top: rem(10);
+	right: rem(10);
+	color: var(--color-white);
+	cursor: pointer;
+	background: none;
+	font-size: 1.5rem;
+	border: none;
+	width: rem(20);
+	height: rem(20);
+}

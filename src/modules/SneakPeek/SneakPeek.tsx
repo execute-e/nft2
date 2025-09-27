@@ -15,6 +15,7 @@ const SneakPeek: React.FC = () => {
       <div className={styles.ellipse}>
         <h2 className={styles.title}>Sneak peek</h2>
         <div className={styles.leftGroup}>
+          
           <img
             src={firstImg}
             alt=""

@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # 1. Сервис базы данных PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: raffle-db
+    # Считываем переменные окружения из файла .env
+    env_file:
+      - .env
+    # Передаем переменные в формате, который ожидает образ Postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      # Пробрасываем порт на хост-машину для удобства разработки
+      - '${DB_PORT}:${DB_PORT}'
+    volumes:
+      # Используем именованный volume для сохранения данных между перезапусками
+      - postgres_data:/var/lib/postgresql/data
+    # Проверка готовности базы данных перед тем, как другие сервисы начнут с ней работать
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # 2. Сервис для применения миграций
+  # Этот контейнер запустится, применит миграции и завершит работу.
+  migrate:
+    # Используем официальный образ golang-migrate
+    image: migrate/migrate
+    container_name: raffle-migrate
+    # Подключаем папку с миграциями из хост-системы в контейнер
+    volumes:
+      - ./migrations:/migrations
+    # Команда для запуска миграций. Обратите внимание, что хост БД - "db" (имя сервиса)
+    command:
+      [
+        '-path',
+        '/migrations',
+        '-database',
+        'postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}?sslmode=disable',
+        'up',
+      ]
+    # Зависит от успешной проверки здоровья сервиса 'db'
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  # 3. Сервис вашего Go-бэкенда
+  backend:
+    container_name: raffle-backend
+    # Собираем образ из Dockerfile в текущей директории
+    build: .
+    # Также используем переменные из .env
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    # Запускается только ПОСЛЕ успешного завершения контейнера 'migrate'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+# Определяем именованный volume для данных PostgreSQL
+volumes:
+  postgres_data:
