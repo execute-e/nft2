@@ -16,8 +16,8 @@ type UserRepo interface {
 	Truncate(ctx context.Context) error
 	CreateUser(ctx context.Context, entity domain.User) error
 	FindRandomEligibleUsers(ctx context.Context, limit int) ([]domain.User, error)
-	DeleteByID(ctx context.Context, id int64) error
-	DeleteByIDs(ctx context.Context, ids []int64) error
+	DeleteUserByID(ctx context.Context, id int64) error
+	DeleteUsersByIDs(ctx context.Context, ids []int64) error
 }
 
 
@@ -25,7 +25,7 @@ type WinnerRepo interface {
 	Truncate(ctx context.Context) error
 	CreateWinner(ctx context.Context, entity domain.User) error
 	GetAll(ctx context.Context) ([]domain.User, error)
-	DeleteWinnerByID(ctx context.Context, id int64) error
+	// DeleteWinnerByID(ctx context.Context, id int64) error
 	FindByTwitterID(ctx context.Context, id string) (*domain.User, error)
 }
 
@@ -104,7 +104,7 @@ func (w *RaffleService) SelectAndPromoteWinners(ctx context.Context, limit int) 
 			logger.Error("failed to create winner", "error", err)
 			return nil, fmt.Errorf("failed to create winner: %w", err)
 		}
-		err = w.userRepo.DeleteByID(ctx, user.ID)
+		err = w.userRepo.DeleteUserByID(ctx, user.ID)
 		if err != nil {
 			logger.Error("failed to delete user", "error", err)
 			return nil, fmt.Errorf("failed to delete user: %w", err)
@@ -112,5 +112,15 @@ func (w *RaffleService) SelectAndPromoteWinners(ctx context.Context, limit int) 
 	}
 
 	logger.Info("users given away successfully", "count", len(users))
+	return users, nil
+}
+
+func (w *RaffleService) ListAllUsers(ctx context.Context) ([]domain.User, error) {
+	logger.Debug("listing all users")
+	users, err := w.userRepo.GetAll(ctx)
+	if err != nil {
+		logger.Error("failed to list users", "error", err)
+		return nil, fmt.Errorf("failed to list users: %w", err)
+	}
 	return users, nil
 }

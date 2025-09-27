@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { Images } from './images/Images'
-import GradientText from '@/styles/styleComponents/GradientText/GradientText'
+import GradientText from '@/components/GradientText/GradientText'
 
 const Collabs: React.FC = () => {
 	const [translatedValue, setTranslatedValue] = useState(0)

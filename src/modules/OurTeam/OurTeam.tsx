@@ -3,8 +3,8 @@ import first from './images/1.svg'
 import second from './images/2.svg'
 import third from './images/3.svg'
 import fourth from './images/4.svg'
-import AnimatedContent from '@/styles/styleComponents/AnimatedContent/AnimatedContent'
-import FadeContent from '@/styles/styleComponents/FadeContent/FadeContent'
+import AnimatedContent from '@/components/AnimatedContent/AnimatedContent'
+import FadeContent from '@/components/FadeContent/FadeContent'
 
 const OurTeam: React.FC = () => {
 	return (

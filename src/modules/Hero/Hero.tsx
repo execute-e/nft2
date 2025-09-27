@@ -2,7 +2,7 @@ import React from 'react'
 import firstVector from './images/vector1.svg'
 import secondVector from './images/vector2.svg'
 import styles from './index.module.scss'
-import GradientText from '../../styles/styleComponents/GradientText/GradientText'
+import GradientText from '../../components/GradientText/GradientText'
 
 const Hero: React.FC = () => {
 	return (

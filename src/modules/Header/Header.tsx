@@ -1,13 +1,15 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styles from './index.module.scss'
 import logo from './images/logo.svg'
 import { BurgerMenuContext } from '@/context'
-import GradientText from '@/styles/styleComponents/GradientText/GradientText'
-import Magnet from '@/styles/styleComponents/Magnet/Magnet'
+import GradientText from '@/components/GradientText/GradientText'
+import Magnet from '@/components/Magnet/Magnet'
+import ModalWindow from '@/components/ModalWindow/ModalWindow'
 
 const Header: React.FC = () => {
 	const { active, setActive } = useContext(BurgerMenuContext)
 
+	const [isOpen, setIsOpen] = useState<boolean>(false)
 	return (
 		<>
 			<header className={'container ' + styles.header}>
@@ -148,8 +150,14 @@ const Header: React.FC = () => {
 				</nav>
 				<div className={styles.buttonOverlay}>
 					<Magnet padding={50} disabled={false} magnetStrength={15}>
-						<button className={styles.button}>Play Game!</button>
+						<button onClick={() => setIsOpen(true)} className={styles.button}>
+							Check eligable
+						</button>
 					</Magnet>
+					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
+						<h2>Information</h2>
+						<p>Lorem ipsum dolor sit amet</p>
+					</ModalWindow>
 					<button
 						className={styles.burgerButton}
 						onClick={() => setActive(true)}

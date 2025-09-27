@@ -1,6 +1,6 @@
-import GradientText from '@/styles/styleComponents/GradientText/GradientText'
+import GradientText from '@/components/GradientText/GradientText'
 import styles from './index.module.scss'
-import Magnet from '@/styles/styleComponents/Magnet/Magnet'
+import Magnet from '@/components/Magnet/Magnet'
 
 const MintDetails: React.FC = () => {
 	return (
@@ -21,22 +21,22 @@ const MintDetails: React.FC = () => {
 					</li>
 				</Magnet>
 				<Magnet padding={50} disabled={false} magnetStrength={15}>
-				<li className={styles.cardItem}>
-					<h3 className={styles.cardTitle}>RARITY</h3>
-					<p className={styles.cardText}>4 unique tiers</p>
-				</li>
+					<li className={styles.cardItem}>
+						<h3 className={styles.cardTitle}>RARITY</h3>
+						<p className={styles.cardText}>4 unique tiers</p>
+					</li>
 				</Magnet>
 				<Magnet padding={50} disabled={false} magnetStrength={15}>
-				<li className={styles.cardItem}>
-					<h3 className={styles.cardTitle}>UTILITY</h3>
-					<p className={styles.cardText}>Merch? Token? Giveaways?</p>
-				</li>
+					<li className={styles.cardItem}>
+						<h3 className={styles.cardTitle}>UTILITY</h3>
+						<p className={styles.cardText}>Merch? Token? Giveaways?</p>
+					</li>
 				</Magnet>
 				<Magnet padding={50} disabled={false} magnetStrength={15}>
-				<li className={styles.cardItem}>
-					<h3 className={styles.cardTitle}>MINT PRICE</h3>
-					<p className={styles.cardText}>TBA</p>
-				</li>
+					<li className={styles.cardItem}>
+						<h3 className={styles.cardTitle}>MINT PRICE</h3>
+						<p className={styles.cardText}>TBA</p>
+					</li>
 				</Magnet>
 			</ul>
 		</section>

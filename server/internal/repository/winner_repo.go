@@ -22,7 +22,7 @@ func NewWinnerRepository(pool *pgxpool.Pool) *winnerRepository {
 
 func (w *winnerRepository) GetAll(ctx context.Context) ([]domain.User, error) {
 	logger.Debug("getting all winners")
-	query := "SELECT id, twitter_id, twitter_screen_name, discord_name, wallet_address FROM winners"
+	query := "SELECT id, twitter_id, twitter_username, discord_username, wallet_address FROM winners"
 	rows, err := w.pool.Query(ctx, query)
 	if err != nil {
 		logger.Error("failed to get all winners", "error", err)
@@ -35,9 +35,9 @@ func (w *winnerRepository) GetAll(ctx context.Context) ([]domain.User, error) {
 		err := rows.Scan(
 			&user.ID,
 			&user.TwitterID,
-			&user.Twitter_screen_name,
-			&user.Discord_name,
-			&user.Wallet_address,
+			&user.TwitterUsername,
+			&user.DiscordUsername,
+			&user.WalletAddress,
 		)
 		if err != nil {
 			logger.Error("failed to scan user", "error", err)
@@ -70,8 +70,8 @@ func (w *winnerRepository) Truncate(ctx context.Context) error {
 func (w *winnerRepository) CreateWinner(ctx context.Context, entity domain.User) error {
 	logger.Debug("creating winner")
 	
-	query := "INSERT INTO winners (twitter_id, twitter_screen_name, discord_name, wallet_address) VALUES ($1, $2, $3, $4)"
-	_, err := w.pool.Exec(ctx, query, entity.TwitterID, entity.Twitter_screen_name, entity.Discord_name, entity.Wallet_address)
+	query := "INSERT INTO winners (twitter_id, twitter_username, discord_username, wallet_address) VALUES ($1, $2, $3, $4)"
+	_, err := w.pool.Exec(ctx, query, entity.TwitterID, entity.TwitterUsername, entity.DiscordUsername, entity.WalletAddress)
 	if err != nil {
 		logger.Error("failed to create winner", "error", err)
 		return fmt.Errorf("failed to create winner: %w", err)
@@ -96,14 +96,14 @@ func (w *winnerRepository) DeleteWinnerByID(ctx context.Context, id int) error {
 
 func(w *winnerRepository) FindByTwitterID(ctx context.Context, id string) (*domain.User, error) {
 	logger.Debug("finding winner by twitter id", "twitter_id", id)
-	query := "SELECT id, twitter_id, twitter_screen_name, discord_name, wallet_address FROM winners WHERE twitter_id = $1"
+	query := "SELECT id, twitter_id, twitter_username, discord_username, wallet_address FROM winners WHERE twitter_id = $1"
 	var user domain.User
 	err := w.pool.QueryRow(ctx, query, id).Scan(
 		&user.ID,
 		&user.TwitterID,
-		&user.Twitter_screen_name,
-		&user.Discord_name,
-		&user.Wallet_address,
+		&user.TwitterUsername,
+		&user.DiscordUsername,
+		&user.WalletAddress,
 	)
 	if err != nil {
 		logger.Error("failed to find winner by twitter id", "error", err)

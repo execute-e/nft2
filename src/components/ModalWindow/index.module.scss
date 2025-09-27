@@ -1,0 +1,43 @@
+@use '../../styles/helpers' as *;
+
+.modalOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.258);
+	z-index: 100;
+	opacity: 0;
+	animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+	to {
+		opacity: 1;
+	}
+}
+
+.modalContent {
+	background-color: var(--color-purple);
+	padding: rem(20);
+	border-radius: 12px;
+	min-width: 300px;
+	max-width: 600px;
+	position: relative;
+	color: var(--color-white);
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.modalClose {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	background: none;
+	font-size: rem(1.5);
+	border: none;
+}

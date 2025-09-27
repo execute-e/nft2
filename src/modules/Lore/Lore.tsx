@@ -2,8 +2,8 @@ import styles from './index.module.scss'
 import loreBg from './images/lore-bg.jpg'
 import vector1 from './images/vector1.svg'
 import vector2 from './images/vector2.svg'
-import GradientText from '../../styles/styleComponents/GradientText/GradientText'
-import FadeContent from '@/styles/styleComponents/FadeContent/FadeContent'
+import GradientText from '../../components/GradientText/GradientText'
+import FadeContent from '@/components/FadeContent/FadeContent'
 const Lore: React.FC = () => {
 	return (
 		<>

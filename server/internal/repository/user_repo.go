@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
+	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/ItsXomyak/internal/domain"
@@ -23,13 +25,14 @@ func NewUserRepository(pool *pgxpool.Pool) *userRepository {
 
 func (r *userRepository) GetAll(ctx context.Context) ([]domain.User, error) {
 	logger.Debug("getting all users")
-	query := "SELECT id, twitter_id, twitter_screen_name, discord_name, wallet_address FROM users"
+	query := "SELECT id, twitter_id, twitter_username, discord_username, wallet_address, created_at FROM users ORDER BY created_at DESC"
 	
 	rows, err := r.pool.Query(ctx, query)
 	if err != nil {
 		logger.Error("failed to get all users", "error", err)
 		return nil, fmt.Errorf("failed to query all users: %w", err)
 	}
+	defer rows.Close()
 
 	var users []domain.User
 	for rows.Next() {
@@ -37,9 +40,10 @@ func (r *userRepository) GetAll(ctx context.Context) ([]domain.User, error) {
 		err := rows.Scan(
 			&user.ID,
 			&user.TwitterID,
-			&user.Twitter_screen_name,
-			&user.Discord_name,
-			&user.Wallet_address,
+			&user.TwitterUsername,
+			&user.DiscordUsername,
+			&user.WalletAddress,
+			&user.CreatedAt,
 		)
 		if err != nil {
 			logger.Error("failed to scan user", "error", err)
@@ -69,21 +73,25 @@ func (r *userRepository) Truncate(ctx context.Context) error {
 
 func (r *userRepository) CreateUser(ctx context.Context, entity domain.User) error {
 	logger.Debug("creating user")
-	query := "INSERT INTO users (twitter_id, twitter_screen_name, discord_name, wallet_address) VALUES ($1, $2, $3, $4)"
-	_, err := r.pool.Exec(ctx, query, entity.TwitterID, entity.Twitter_screen_name, entity.Discord_name, entity.Wallet_address)
+	query := "INSERT INTO users (twitter_id, twitter_username, twitter_created_at, discord_username, wallet_address) VALUES ($1, $2, $3, $4, $5)"
+	_, err := r.pool.Exec(ctx, query, entity.TwitterID, entity.TwitterUsername, entity.DiscordUsername, entity.WalletAddress)
 	if err != nil {
+		var pgErr *pgx.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+				logger.Error("user already exists", "error", err)
+				return errors.New("user with this twitter account already registered")
+		}
 		logger.Error("failed to create user", "error", err)
 		return fmt.Errorf("failed to create user: %w", err)
 	}
 	logger.Info("user created successfully", "twitter_id", entity.TwitterID)
 	return nil
-
 }
 
 func (r *userRepository) FindRandomEligibleUsers(ctx context.Context, limit int) ([]domain.User, error) {
 	logger.Debug("finding random eligible users")
 	query := `
-		SELECT id, twitter_id, twitter_screen_name, discord_name, wallet_address
+		SELECT id, twitter_id, twitter_username, discord_username, wallet_address
 		FROM users
 		WHERE twitter_id NOT IN (
 		    SELECT twitter_id FROM winners
@@ -105,9 +113,9 @@ func (r *userRepository) FindRandomEligibleUsers(ctx context.Context, limit int)
 		err := rows.Scan(
 			&user.ID,
 			&user.TwitterID,
-			&user.Twitter_screen_name,
-			&user.Discord_name,
-			&user.Wallet_address,
+			&user.TwitterUsername,
+			&user.DiscordUsername,
+			&user.WalletAddress,
 		)
 		if err != nil {
 			logger.Error("failed to scan random eligible user row", "error", err)
@@ -125,7 +133,7 @@ func (r *userRepository) FindRandomEligibleUsers(ctx context.Context, limit int)
 	return users, nil
 }
 
-func (r *userRepository) DeleteUserByID(ctx context.Context, id int) error {
+func (r *userRepository) DeleteUserByID(ctx context.Context, id int64) error {
 	logger.Debug("deleting user", "id", id)
 	query := "DELETE FROM users WHERE id = $1"
 	_, err := r.pool.Exec(ctx, query, id)
@@ -137,7 +145,7 @@ func (r *userRepository) DeleteUserByID(ctx context.Context, id int) error {
 	return nil
 }
 
-func (r *userRepository) DeleteUserByIDs(ctx context.Context, ids []int64) error {
+func (r *userRepository) DeleteUsersByIDs(ctx context.Context, ids []int64) error {
 	logger.Debug("deleting users", "ids", ids)
 	query := "DELETE FROM users WHERE id = ANY($1)"
 	_, err := r.pool.Exec(ctx, query, ids)
