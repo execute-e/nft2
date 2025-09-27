@@ -1,43 +1,49 @@
 @use '../../styles/helpers' as *;
 
-.modalOverlay {
+.modal {
 	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: rgba(0, 0, 0, 0.258);
+	top: 50%;
+	left: 50%;
+	translate: -50% -50%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: rem(12);
+	display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 0 0 100vmax #00000030;
 	z-index: 100;
-	opacity: 0;
-	animation: fadeIn 0.3s ease forwards;
+	width: 30%;
+
+	&[open] {
+        opacity: 1;
+        visibility: visible;
+    }
+
+	&::backdrop {
+        background: #00000000;
+    }
 }
 
-@keyframes fadeIn {
-	to {
-		opacity: 1;
-	}
-}
-
-.modalContent {
+.inner {
+	display: flex;
+	flex-direction: column;
 	background-color: var(--color-purple);
-	padding: rem(20);
-	border-radius: 12px;
-	min-width: 300px;
-	max-width: 600px;
-	position: relative;
 	color: var(--color-white);
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+	padding: rem(20);
 }
 
 .modalClose {
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	top: rem(10);
+	right: rem(10);
+	color: var(--color-white);
 	cursor: pointer;
 	background: none;
-	font-size: rem(1.5);
+	font-size: 1.5rem;
 	border: none;
+	width: rem(20);
+	height: rem(20);
 }

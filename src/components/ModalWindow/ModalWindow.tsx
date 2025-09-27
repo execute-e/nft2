@@ -1,43 +1,57 @@
-import { useEffect } from 'react'
-import ReactDOM from 'react-dom'
-import styles from './index.module.scss'
+import { useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import styles from './index.module.scss';
 
 type ModalProps = {
-	children: React.ReactNode
-	isOpen: boolean
-	onClose: () => void
-}
+  children: React.ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
+};
 
 const ModalWindow = ({ children, isOpen, onClose }: ModalProps) => {
-	useEffect(() => {
-		if (!isOpen) return
+  const modalRef = useRef<HTMLDialogElement>(null);
 
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
-				onClose()
-			}
-		}
+  useEffect(() => {
+    const modal = modalRef.current;
+    if (!modal) return;
 
-		document.addEventListener('keydown', handleKeyDown)
+    if (isOpen) {
+      modal.showModal();
+      document.documentElement.classList.add('locked');
+    } else {
+      modal.close();
+      document.documentElement.classList.remove('locked');
+    }
+  }, [isOpen]);
 
-		return () => {
-			document.removeEventListener('keydown', handleKeyDown)
-		}
-	}, [isOpen, onClose])
+  useEffect(() => {
+    const modal = modalRef.current;
+    if (!modal) return;
 
-	if (!isOpen) return null
+    const handleClose = () => onClose();
+    modal.addEventListener('close', handleClose);
 
-	return ReactDOM.createPortal(
-		<div className={styles.modalOverlay} onClick={onClose}>
-			<div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-				<button className={styles.modalClose} onClick={onClose}>
-					x
-				</button>
-				{children}
-			</div>
-		</div>,
-		document.getElementById('portal-root') as HTMLElement
-	)
-}
+    return () => modal.removeEventListener('close', handleClose);
+  }, [onClose]);
 
-export default ModalWindow
+  return ReactDOM.createPortal(
+    <dialog
+      className={styles.modal}
+      onClick={(e) => {
+        if (e.currentTarget === e.target) {
+          onClose();
+        }
+      }}
+      ref={modalRef}>
+      <div className={styles.inner}>
+        <button className={styles.modalClose} onClick={onClose}>
+          x
+        </button>
+        {children}
+      </div>
+    </dialog>,
+    document.getElementById('portal-root') as HTMLElement,
+  );
+};
+
+export default ModalWindow;
