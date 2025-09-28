@@ -94,21 +94,29 @@ func (w *winnerRepository) DeleteWinnerByID(ctx context.Context, id int) error {
 	return nil
 }
 
-func(w *winnerRepository) FindByTwitterID(ctx context.Context, id string) (*domain.User, error) {
-	logger.Debug("finding winner by twitter id", "twitter_id", id)
-	query := "SELECT id, twitter_id, twitter_username, discord_username, wallet_address FROM winners WHERE twitter_id = $1"
-	var user domain.User
-	err := w.pool.QueryRow(ctx, query, id).Scan(
-		&user.ID,
-		&user.TwitterID,
-		&user.TwitterUsername,
-		&user.DiscordUsername,
-		&user.WalletAddress,
-	)
-	if err != nil {
-		logger.Error("failed to find winner by twitter id", "error", err)
-		return &domain.User{}, fmt.Errorf("failed to find winner by twitter id: %w", err)
-	}
-	logger.Info("winner found successfully", "twitter_id", id)
-	return &user, nil
+func (w *winnerRepository) FindByTwitterID(ctx context.Context, id string) (*domain.User, error) {
+    logger.Debug("finding winner by twitter id", "twitter_id", id)
+
+    query := `SELECT id, twitter_id, twitter_username, discord_username, wallet_address
+              FROM winners 
+              WHERE twitter_id = $1`
+
+    var winner domain.User
+    row := w.pool.QueryRow(ctx, query, id)
+    
+    err := row.Scan(
+        &winner.ID,
+        &winner.TwitterID,
+        &winner.TwitterUsername,
+        &winner.DiscordUsername,
+        &winner.WalletAddress,
+    )
+
+    if err != nil {
+				logger.Warn("failed to find winner by twitter id", "error", err)
+        return nil, err
+    }
+
+		logger.Info("winner found successfully", "twitter_id", id)
+    return &winner, nil
 }

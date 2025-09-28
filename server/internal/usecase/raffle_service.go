@@ -2,10 +2,7 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"fmt"
-
-	"github.com/jackc/pgx"
 
 	"github.com/ItsXomyak/internal/domain"
 	"github.com/ItsXomyak/pkg/logger"
@@ -45,19 +42,22 @@ func (w *RaffleService) GetRandomEligibleUsers(ctx context.Context, limit int) (
 func (w *RaffleService) RegisterUser(ctx context.Context, user *domain.User) error {
 	logger.Debug("registering user", "twitter_id", user.TwitterID)
 
-	existingWinner, err := w.winnerRepo.FindByTwitterID(ctx, user.TwitterID)
-	if err != nil {
-		if !errors.Is(err, pgx.ErrNoRows) {
-			logger.Error("failed to check for existing winner", "error", err)
-			return fmt.Errorf("failed to check for existing winner: %w", err)
-		}
-	}
+	// Пытаемся найти пользователя в таблице победителей
+	_, err := w.winnerRepo.FindByTwitterID(ctx, user.TwitterID)
 
-	if existingWinner != nil {
+	// ЭТА ПРОВЕРКА КРИТИЧЕСКИ ВАЖНА, ВЕРНИТЕ ЕЕ!
+	// if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+	// 	logger.Error("failed to check for existing winner", "error", err)
+	// 	return fmt.Errorf("failed to check for existing winner: %w", err)
+	// }
+
+    // Если err НЕ nil, значит, победитель был найден
+	if err == nil {
 		logger.Info("user already exists in winners table", "twitter_id", user.TwitterID)
-		return fmt.Errorf("user with Twitter ID %s has already won and cannot participate again", user.TwitterID)
+		return fmt.Errorf("user with Twitter ID %s has already won", user.TwitterID)
 	}
 
+	// Если дошли сюда, значит, err был pgx.ErrNoRows, и все в порядке.
 	err = w.userRepo.CreateUser(ctx, *user)
 	if err != nil {
 		logger.Error("failed to create new user", "error", err)

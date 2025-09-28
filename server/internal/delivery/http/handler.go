@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 
@@ -16,6 +17,11 @@ const (
 	verifierCookieName  = "twitter_verifier"
 	sessionCookieName   = "user_session"
 	cookieMaxAgeSeconds = 3600 // 1 час
+)
+
+var (
+	discordUsernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_.]{2,32}$`)
+	walletAddressRegex   = regexp.MustCompile(`^0x[a-fA-F0-9]{40}$`) // Ethereum адрес
 )
 
 type Handler struct {
@@ -84,7 +90,7 @@ func (h *Handler) RegisterForRaffle(c *gin.Context) {
 		return
 	}
 
-	var sessionData usecase.TwitterAuthResult
+	var sessionData usecase.TwitterAuthResult 
 	if err := json.Unmarshal([]byte(sessionCookie), &sessionData); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to parse session"})
 		return
@@ -96,7 +102,7 @@ func (h *Handler) RegisterForRaffle(c *gin.Context) {
 		return
 	}
 
-	user := domain.User{
+	userToRegister := domain.User{
 		TwitterID:        sessionData.TwitterID,
 		TwitterUsername:  sessionData.TwitterUsername,
 		TwitterCreatedAt: sessionData.TwitterCreatedAt,
@@ -104,7 +110,11 @@ func (h *Handler) RegisterForRaffle(c *gin.Context) {
 		WalletAddress:    form.WalletAddress,
 	}
 
-	if err := h.raffleService.RegisterUser(c.Request.Context(), &user); err != nil {
+	if err := h.raffleService.RegisterUser(c.Request.Context(), &userToRegister); err != nil {
+		if errors.Is(err, domain.ErrUserAlreadyExists) {
+			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to register user", "details": err.Error()})
 		return
 	}

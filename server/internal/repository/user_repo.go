@@ -74,12 +74,12 @@ func (r *userRepository) Truncate(ctx context.Context) error {
 func (r *userRepository) CreateUser(ctx context.Context, entity domain.User) error {
 	logger.Debug("creating user")
 	query := "INSERT INTO users (twitter_id, twitter_username, twitter_created_at, discord_username, wallet_address) VALUES ($1, $2, $3, $4, $5)"
-	_, err := r.pool.Exec(ctx, query, entity.TwitterID, entity.TwitterUsername, entity.DiscordUsername, entity.WalletAddress)
+	_, err := r.pool.Exec(ctx, query, entity.TwitterID, entity.TwitterUsername, entity.TwitterCreatedAt ,entity.DiscordUsername, entity.WalletAddress)
 	if err != nil {
 		var pgErr *pgx.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
 				logger.Error("user already exists", "error", err)
-				return errors.New("user with this twitter account already registered")
+				return domain.ErrUserAlreadyExists
 		}
 		logger.Error("failed to create user", "error", err)
 		return fmt.Errorf("failed to create user: %w", err)
