@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"regexp"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -102,6 +103,30 @@ func (h *Handler) RegisterForRaffle(c *gin.Context) {
 		return
 	}
 
+	var validationErrors []string
+
+	if form.DiscordUsername == "" {
+		validationErrors = append(validationErrors, "discord username is required")
+	} else if len(form.DiscordUsername) < 2 || len(form.DiscordUsername) > 32 {
+		validationErrors = append(validationErrors, "discord username must be 2-32 characters long")
+	} else if !regexp.MustCompile(`^[a-zA-Z0-9_.]+$`).MatchString(form.DiscordUsername) {
+		validationErrors = append(validationErrors, "discord username can only contain letters, numbers, dots and underscores")
+	}
+
+	if form.WalletAddress == "" {
+		validationErrors = append(validationErrors, "wallet address is required")
+	} else if !regexp.MustCompile(`^0x[a-fA-F0-9]{40}$`).MatchString(form.WalletAddress) {
+		validationErrors = append(validationErrors, "invalid ethereum wallet address format")
+	}
+
+	if len(validationErrors) > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "validation failed",
+			"details": validationErrors,
+		})
+		return
+	}
+
 	userToRegister := domain.User{
 		TwitterID:        sessionData.TwitterID,
 		TwitterUsername:  sessionData.TwitterUsername,
@@ -129,4 +154,96 @@ func (h *Handler) ListParticipants(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, users)
+}
+
+func (h *Handler) TruncateUsers(c *gin.Context) {
+	if err := h.raffleService.TruncateUsers(c.Request.Context()); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to truncate users", "details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "users truncated successfully"})
+}
+
+func (h *Handler) TruncateWinners(c *gin.Context) {
+	if err := h.raffleService.TruncateWinners(c.Request.Context()); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to truncate winners", "details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "winners truncated successfully"})
+}
+
+func (h *Handler) SelectWinners(c *gin.Context) {
+	type selectWinnersRequest struct {
+		Limit int `json:"limit" binding:"required,gt=0"` // gt=0 означает "больше чем 0"
+	}
+
+	var req selectWinnersRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body", "details": err.Error()})
+		return
+	}
+
+	winners, err := h.raffleService.SelectAndPromoteWinners(c.Request.Context(), req.Limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to select winners", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, winners)
+}
+
+func (h *Handler) ListWinners(c *gin.Context) {
+	winners, err := h.raffleService.ListAllWinners(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve winners", "details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, winners)
+}
+
+func (h *Handler) DeleteUserByID(c *gin.Context) {
+	idStr := c.Param("id")
+
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format, must be a number"})
+		return
+	}
+
+	err = h.raffleService.DeleteUserByID(c.Request.Context(), id)
+	if err != nil {
+		if errors.Is(err, domain.ErrUserNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete user", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
+}
+
+func (h *Handler) DeleteWinnerByID(c *gin.Context) {
+	idStr := c.Param("id")
+
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format, must be a number"})
+		return
+	}
+
+	err = h.raffleService.DeleteWinnerByID(c.Request.Context(), id)
+	if err != nil {
+		if errors.Is(err, domain.ErrUserNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete winner", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Winner deleted successfully"})
 }

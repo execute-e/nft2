@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/ItsXomyak/internal/domain"
@@ -22,7 +23,7 @@ type WinnerRepo interface {
 	Truncate(ctx context.Context) error
 	CreateWinner(ctx context.Context, entity domain.User) error
 	GetAll(ctx context.Context) ([]domain.User, error)
-	// DeleteWinnerByID(ctx context.Context, id int64) error
+	DeleteWinnerByID(ctx context.Context, id int64) error
 	FindByTwitterID(ctx context.Context, id string) (*domain.User, error)
 }
 
@@ -42,22 +43,20 @@ func (w *RaffleService) GetRandomEligibleUsers(ctx context.Context, limit int) (
 func (w *RaffleService) RegisterUser(ctx context.Context, user *domain.User) error {
 	logger.Debug("registering user", "twitter_id", user.TwitterID)
 
-	// Пытаемся найти пользователя в таблице победителей
+	// попытка найти пользователя в таблице победителей
 	_, err := w.winnerRepo.FindByTwitterID(ctx, user.TwitterID)
 
-	// ЭТА ПРОВЕРКА КРИТИЧЕСКИ ВАЖНА, ВЕРНИТЕ ЕЕ!
-	// if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+	// TODO: доработка
+	// if err != nil && !errors.Is(err, domain.ErrUserNotFound) {
 	// 	logger.Error("failed to check for existing winner", "error", err)
 	// 	return fmt.Errorf("failed to check for existing winner: %w", err)
 	// }
 
-    // Если err НЕ nil, значит, победитель был найден
 	if err == nil {
 		logger.Info("user already exists in winners table", "twitter_id", user.TwitterID)
 		return fmt.Errorf("user with Twitter ID %s has already won", user.TwitterID)
 	}
 
-	// Если дошли сюда, значит, err был pgx.ErrNoRows, и все в порядке.
 	err = w.userRepo.CreateUser(ctx, *user)
 	if err != nil {
 		logger.Error("failed to create new user", "error", err)
@@ -123,4 +122,62 @@ func (w *RaffleService) ListAllUsers(ctx context.Context) ([]domain.User, error)
 		return nil, fmt.Errorf("failed to list users: %w", err)
 	}
 	return users, nil
+}
+
+func (w *RaffleService) TruncateUsers(ctx context.Context) error {
+	logger.Debug("truncating users")
+	err := w.userRepo.Truncate(ctx)
+	if err != nil {
+		logger.Error("failed to truncate users", "error", err)
+		return fmt.Errorf("failed to truncate users: %w", err)
+	}
+	return nil
+}
+
+func (w *RaffleService) TruncateWinners(ctx context.Context) error {
+	logger.Debug("truncating winners")
+	err := w.winnerRepo.Truncate(ctx)
+	if err != nil {
+		logger.Error("failed to truncate winners", "error", err)
+		return fmt.Errorf("failed to truncate winners: %w", err)
+	}
+	return nil
+}
+
+func (w *RaffleService) ListAllWinners(ctx context.Context) ([]domain.User, error) {
+	logger.Debug("listing all winners")
+	users, err := w.winnerRepo.GetAll(ctx)
+	if err != nil {
+		logger.Error("failed to list winners", "error", err)
+		return nil, fmt.Errorf("failed to list winners: %w", err)
+	}
+	return users, nil
+}
+
+func (w *RaffleService) DeleteUserByID(ctx context.Context, id int64) error {
+	logger.Debug("deleting user", "id", id)
+	err := w.userRepo.DeleteUserByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, domain.ErrUserNotFound) {
+			logger.Info("user not found", "id", id)
+			return domain.ErrUserNotFound 
+		}
+		logger.Error("failed to delete user", "error", err)
+		return fmt.Errorf("failed to delete user: %w", err)
+	}
+	return nil
+}
+
+func (w *RaffleService) DeleteWinnerByID(ctx context.Context, id int64) error {
+	logger.Debug("deleting winner", "id", id)
+	err := w.winnerRepo.DeleteWinnerByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, domain.ErrUserNotFound) {
+			logger.Info("winner not found", "id", id)
+			return domain.ErrUserNotFound 
+		}
+		logger.Error("failed to delete winner", "error", err)
+		return fmt.Errorf("failed to delete winner: %w", err)
+	}
+	return nil
 }

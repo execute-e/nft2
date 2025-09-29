@@ -136,14 +136,22 @@ func (r *userRepository) FindRandomEligibleUsers(ctx context.Context, limit int)
 func (r *userRepository) DeleteUserByID(ctx context.Context, id int64) error {
 	logger.Debug("deleting user", "id", id)
 	query := "DELETE FROM users WHERE id = $1"
-	_, err := r.pool.Exec(ctx, query, id)
+
+	cmdTag, err := r.pool.Exec(ctx, query, id)
 	if err != nil {
-		logger.Error("failed to delete user", "error", err)
+		logger.Error("failed to execute delete query", "error", err)
 		return fmt.Errorf("failed to delete user: %w", err)
 	}
+
+	if cmdTag.RowsAffected() == 0 {
+		logger.Warn("user not found for deletion", "id", id)
+		return domain.ErrUserNotFound
+	}
+
 	logger.Info("user deleted successfully", "id", id)
 	return nil
 }
+
 
 func (r *userRepository) DeleteUsersByIDs(ctx context.Context, ids []int64) error {
 	logger.Debug("deleting users", "ids", ids)

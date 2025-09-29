@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
+	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/ItsXomyak/internal/domain"
@@ -81,13 +83,19 @@ func (w *winnerRepository) CreateWinner(ctx context.Context, entity domain.User)
 	return nil
 }
 
-func (w *winnerRepository) DeleteWinnerByID(ctx context.Context, id int) error {
+func (r *winnerRepository) DeleteWinnerByID(ctx context.Context, id int64) error {
 	logger.Debug("deleting winner", "id", id)
 	query := "DELETE FROM winners WHERE id = $1"
-	_, err := w.pool.Exec(ctx, query, id)
+
+	cmdTag, err := r.pool.Exec(ctx, query, id)
 	if err != nil {
-		logger.Error("failed to delete winner", "error", err)
+		logger.Error("failed to execute delete query", "error", err)
 		return fmt.Errorf("failed to delete winner: %w", err)
+	}
+
+	if cmdTag.RowsAffected() == 0 {
+		logger.Warn("winner not found for deletion", "id", id)
+		return domain.ErrUserNotFound
 	}
 
 	logger.Info("winner deleted successfully", "id", id)
@@ -113,6 +121,10 @@ func (w *winnerRepository) FindByTwitterID(ctx context.Context, id string) (*dom
     )
 
     if err != nil {
+				if errors.Is(err, pgx.ErrNoRows) {
+						logger.Info("winner not found", "twitter_id", id)
+						return nil, domain.ErrUserNotFound
+				}
 				logger.Warn("failed to find winner by twitter id", "error", err)
         return nil, err
     }
