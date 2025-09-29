@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import styles from './index.module.scss';
 import logo from './images/logo.svg';
 import { BurgerMenuContext } from '@/context';
@@ -8,8 +8,13 @@ import ModalWindow from '@/components/ModalWindow/ModalWindow';
 
 const Header: React.FC = () => {
   const { active, setActive } = useContext(BurgerMenuContext);
-
+  const modalForm = useRef<HTMLFormElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  }
+
   return (
     <>
       <header className={'container ' + styles.header}>
@@ -113,8 +118,36 @@ const Header: React.FC = () => {
             </button>
           </Magnet>
           <ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
-            <h2>Information</h2>
-            <p>Lorem ipsum dolor sit amet</p>
+            <form onSubmit={handleSubmit} ref={modalForm} noValidate className={styles.form}>
+              <header>
+                <h2 className={styles.formTitle}>Gift drawing</h2>
+              </header>
+              <fieldset className={styles.fieldset}>
+                <legend className="visually-hidden">Conditions</legend>
+
+                <ul className={styles.formList}>
+                  <li className={styles.formItem}>
+                    <a href="/" target="_blank" className={styles.twitter}>
+                      Authorize with Twitter
+                    </a>
+                  </li>
+                  <li className={styles.formItem}>
+                    <label className='visually-hidden' htmlFor="discord">Type your Discord: </label>
+                    <input pattern='^[a-zA-Z0-9_.]{2,32}$' placeholder='Type your Discord:' maxLength={25} type="text" id="discord" className={styles.discord} />
+                  </li>
+                  <li className={styles.formItem}>
+                    <label className='visually-hidden' htmlFor="wallet">Type your wallet address: </label>
+                    <input pattern='^0x[a-fA-F0-9]{40}$' placeholder='Type your wallet address:' maxLength={40} type="text" id="wallet" className={styles.wallet} />
+                  </li>
+                  <li className={styles.formItem + " " + styles.formError}>
+                    ERROR
+                  </li>
+                  <li className={styles.formItem}>
+                    <button type="submit" className={styles.formButton}>Confirm</button>
+                  </li>
+                </ul>
+              </fieldset>
+            </form>
           </ModalWindow>
           <button className={styles.burgerButton} onClick={() => setActive(true)} disabled={active}>
             <span className={styles.burgerButtonLine}></span>
