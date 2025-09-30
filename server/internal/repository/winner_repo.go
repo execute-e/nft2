@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
+	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/ItsXomyak/internal/domain"
@@ -81,34 +83,52 @@ func (w *winnerRepository) CreateWinner(ctx context.Context, entity domain.User)
 	return nil
 }
 
-func (w *winnerRepository) DeleteWinnerByID(ctx context.Context, id int) error {
+func (r *winnerRepository) DeleteWinnerByID(ctx context.Context, id int64) error {
 	logger.Debug("deleting winner", "id", id)
 	query := "DELETE FROM winners WHERE id = $1"
-	_, err := w.pool.Exec(ctx, query, id)
+
+	cmdTag, err := r.pool.Exec(ctx, query, id)
 	if err != nil {
-		logger.Error("failed to delete winner", "error", err)
+		logger.Error("failed to execute delete query", "error", err)
 		return fmt.Errorf("failed to delete winner: %w", err)
+	}
+
+	if cmdTag.RowsAffected() == 0 {
+		logger.Warn("winner not found for deletion", "id", id)
+		return domain.ErrUserNotFound
 	}
 
 	logger.Info("winner deleted successfully", "id", id)
 	return nil
 }
 
-func(w *winnerRepository) FindByTwitterID(ctx context.Context, id string) (*domain.User, error) {
-	logger.Debug("finding winner by twitter id", "twitter_id", id)
-	query := "SELECT id, twitter_id, twitter_username, discord_username, wallet_address FROM winners WHERE twitter_id = $1"
-	var user domain.User
-	err := w.pool.QueryRow(ctx, query, id).Scan(
-		&user.ID,
-		&user.TwitterID,
-		&user.TwitterUsername,
-		&user.DiscordUsername,
-		&user.WalletAddress,
-	)
-	if err != nil {
-		logger.Error("failed to find winner by twitter id", "error", err)
-		return &domain.User{}, fmt.Errorf("failed to find winner by twitter id: %w", err)
-	}
-	logger.Info("winner found successfully", "twitter_id", id)
-	return &user, nil
+func (w *winnerRepository) FindByTwitterID(ctx context.Context, id string) (*domain.User, error) {
+    logger.Debug("finding winner by twitter id", "twitter_id", id)
+
+    query := `SELECT id, twitter_id, twitter_username, discord_username, wallet_address
+              FROM winners 
+              WHERE twitter_id = $1`
+
+    var winner domain.User
+    row := w.pool.QueryRow(ctx, query, id)
+    
+    err := row.Scan(
+        &winner.ID,
+        &winner.TwitterID,
+        &winner.TwitterUsername,
+        &winner.DiscordUsername,
+        &winner.WalletAddress,
+    )
+
+    if err != nil {
+				if errors.Is(err, pgx.ErrNoRows) {
+						logger.Info("winner not found", "twitter_id", id)
+						return nil, domain.ErrUserNotFound
+				}
+				logger.Warn("failed to find winner by twitter id", "error", err)
+        return nil, err
+    }
+
+		logger.Info("winner found successfully", "twitter_id", id)
+    return &winner, nil
 }

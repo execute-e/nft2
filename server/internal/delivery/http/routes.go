@@ -13,14 +13,24 @@ func RegisterRoutes(router *gin.Engine, h *Handler, adminToken, sessionSecret st
 
 	authGroup := router.Group("/auth/twitter")
 	{
-		authGroup.GET("/login", h.TwitterLogin)
-		authGroup.GET("/callback", h.TwitterCallback)
+		authGroup.GET("/login", h.TwitterLogin) // GET /auth/twitter/login
+		authGroup.GET("/callback", h.TwitterCallback) // GET /auth/twitter/callback
 	}
 
 	raffleGroup := router.Group("/raffle")
 	{
-		raffleGroup.POST("/register", h.RegisterForRaffle)
-		// middleware только к этому эндпоинту 
-		raffleGroup.GET("/list", AdminAuth(adminToken), h.ListParticipants)
+		raffleGroup.POST("/register", h.RegisterForRaffle) // POST /raffle/register
+	}
+
+	adminGroup := router.Group("/admin", AdminAuth(adminToken))
+	{
+		adminGroup.GET("/participants", h.ListParticipants) // GET /admin/participants
+		adminGroup.DELETE("/participants", h.TruncateUsers)  // DELETE /admin/participants
+		adminGroup.DELETE("/participants/:id", h.DeleteUserByID) // DELETE /admin/participants/:id
+
+		adminGroup.POST("/winners", h.SelectWinners)      // POST /admin/winners
+		adminGroup.DELETE("/winners", h.TruncateWinners)    // DELETE /admin/winners
+		adminGroup.GET("/winners", h.ListWinners)          // GET /admin/winners
+		adminGroup.DELETE("/winners/:id", h.DeleteWinnerByID) // DELETE /admin/winners/:id
 	}
 }

@@ -74,12 +74,12 @@ func (r *userRepository) Truncate(ctx context.Context) error {
 func (r *userRepository) CreateUser(ctx context.Context, entity domain.User) error {
 	logger.Debug("creating user")
 	query := "INSERT INTO users (twitter_id, twitter_username, twitter_created_at, discord_username, wallet_address) VALUES ($1, $2, $3, $4, $5)"
-	_, err := r.pool.Exec(ctx, query, entity.TwitterID, entity.TwitterUsername, entity.DiscordUsername, entity.WalletAddress)
+	_, err := r.pool.Exec(ctx, query, entity.TwitterID, entity.TwitterUsername, entity.TwitterCreatedAt ,entity.DiscordUsername, entity.WalletAddress)
 	if err != nil {
 		var pgErr *pgx.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
 				logger.Error("user already exists", "error", err)
-				return errors.New("user with this twitter account already registered")
+				return domain.ErrUserAlreadyExists
 		}
 		logger.Error("failed to create user", "error", err)
 		return fmt.Errorf("failed to create user: %w", err)
@@ -136,14 +136,22 @@ func (r *userRepository) FindRandomEligibleUsers(ctx context.Context, limit int)
 func (r *userRepository) DeleteUserByID(ctx context.Context, id int64) error {
 	logger.Debug("deleting user", "id", id)
 	query := "DELETE FROM users WHERE id = $1"
-	_, err := r.pool.Exec(ctx, query, id)
+
+	cmdTag, err := r.pool.Exec(ctx, query, id)
 	if err != nil {
-		logger.Error("failed to delete user", "error", err)
+		logger.Error("failed to execute delete query", "error", err)
 		return fmt.Errorf("failed to delete user: %w", err)
 	}
+
+	if cmdTag.RowsAffected() == 0 {
+		logger.Warn("user not found for deletion", "id", id)
+		return domain.ErrUserNotFound
+	}
+
 	logger.Info("user deleted successfully", "id", id)
 	return nil
 }
+
 
 func (r *userRepository) DeleteUsersByIDs(ctx context.Context, ids []int64) error {
 	logger.Debug("deleting users", "ids", ids)
