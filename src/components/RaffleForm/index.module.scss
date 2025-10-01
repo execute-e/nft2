@@ -1,0 +1,207 @@
+@use '../../styles/helpers' as *;
+
+.raffleContainer {
+	display: flex;
+	flex-direction: column; /* Вертикальное расположение на мобильных */
+	width: 100%;
+	max-width: 500px; /* Ограничение ширины для мобильных */
+	min-height: auto;
+	background-color: var(--color-white);
+	border-radius: 16px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	position: relative;
+	overflow: hidden;
+	font-family: var(--font-family-base);
+	margin: 20px; // Отступы на мобильных
+}
+
+/* --- 3. Панели (Форма и Инфо) --- */
+.formPanel {
+	padding: 30px 25px;
+	color: var(--color-black);
+	order: 2; /* Форма будет второй (внизу) на мобильных */
+}
+
+.infoPanel {
+	padding: 40px 25px;
+	background-color: var(--color-purple);
+	background-image: linear-gradient(
+		135deg,
+		var(--color-purple) 0%,
+		var(--color-pink) 100%
+	);
+	color: var(--color-white);
+	text-align: center;
+	order: 1; /* Инфо-панель будет первой (сверху) */
+}
+
+.infoContent {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+
+	h3 {
+		font-family: var(--font-family-accent);
+		font-size: 2.5rem;
+		font-weight: 400;
+		margin: 0;
+		line-height: 1.2;
+	}
+	p {
+		font-size: 0.9rem;
+		line-height: 1.6;
+		max-width: 350px;
+		opacity: 0.9;
+	}
+}
+
+/* --- 4. Элементы формы --- */
+.formTitle {
+	font-family: var(--font-family-accent);
+	font-size: 2.2rem;
+	font-weight: 400;
+	margin-bottom: 8px;
+	color: var(--color-black);
+	text-align: center;
+}
+
+.formSubtitle {
+	font-size: 1rem;
+	margin-bottom: 30px;
+	color: var(--color-black-80);
+	text-align: center;
+}
+
+.inputGroup {
+	margin-bottom: 20px;
+	text-align: left;
+
+	label {
+		display: block;
+		margin-bottom: 8px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--color-black-80);
+	}
+
+	input {
+		background-color: var(--bgc);
+		border: 1px solid #e0e0e0;
+		padding: 12px 15px;
+		width: 100%;
+		border-radius: 8px;
+		color: var(--color-black);
+		font-family: var(--font-family-base);
+		transition: all var(--transition-duration);
+
+		&::placeholder {
+			color: #b0b0b0;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: var(--color-purple);
+			box-shadow: 0 0 0 3px rgba(153, 162, 255, 0.3);
+			background-color: var(--color-white);
+		}
+	}
+}
+
+.error {
+	color: #d93025;
+	font-size: 0.8rem;
+	font-weight: 500;
+	margin-top: 6px;
+}
+
+/* --- 5. Кнопки --- */
+.submitButton,
+.twitterButton,
+.discordLinkButton {
+	width: 100%;
+	border-radius: 8px;
+	border: none;
+	font-size: 1rem;
+	font-weight: 600;
+	padding: 14px 0;
+	cursor: pointer;
+	transition: all var(--transition-duration);
+	font-family: var(--font-family-base);
+	text-decoration: none;
+	text-align: center;
+}
+
+.submitButton {
+	background: var(--color-purple);
+	color: var(--color-white);
+	&:hover:not(:disabled) {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 20px rgba(153, 162, 255, 0.4);
+	}
+	&:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+}
+
+.twitterButton {
+	background-color: #1da1f2;
+	color: #fff;
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 20px rgba(29, 161, 242, 0.3);
+	}
+}
+
+.discordLinkButton {
+	border: 2px solid var(--color-white);
+	background-color: transparent;
+	color: var(--color-white);
+	padding: 12px 0;
+	width: 80%;
+	max-width: 250px;
+	&:hover {
+		background-color: var(--color-white);
+		color: var(--color-purple);
+	}
+}
+
+.twitterSuccess {
+	background-color: #eaf5fd;
+	border: 1px solid #1da1f2;
+	color: #0c85d0;
+	padding: 12px;
+	border-radius: 8px;
+	text-align: center;
+	font-weight: 500;
+	font-size: 0.9rem;
+}
+
+/* --- 6. Адаптивность для планшетов и десктопов --- */
+@media (min-width: 992px) {
+	.raffleContainer {
+		flex-direction: row; /* Возвращаем горизонтальное расположение */
+		max-width: 950px; /* Увеличиваем ширину на больших экранах */
+		margin: 0; // Убираем внешние отступы
+	}
+
+	.formPanel {
+		flex: 1.2;
+		padding: 50px 60px;
+		order: 1; /* Форма теперь слева */
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.infoPanel {
+		flex: 1;
+		order: 2; /* Инфо-панель теперь справа */
+	}
+
+	.formTitle,
+	.formSubtitle {
+		text-align: left;
+	}
+}

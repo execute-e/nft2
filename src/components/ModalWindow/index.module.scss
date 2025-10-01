@@ -10,31 +10,29 @@
 	border: none;
 	border-radius: rem(12);
 	display: block;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s;
-    box-shadow: 0 0 0 100vmax #00000030;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s;
+	box-shadow: 0 0 0 100vmax #00000094;
 	z-index: 100;
 	min-width: 40%;
 
 	&[open] {
-        opacity: 1;
-        visibility: visible;
-    }
+		opacity: 1;
+		visibility: visible;
+	}
 
 	&::backdrop {
-        background: #00000000;
-    }
+		background: #00000000;
+	}
 }
 
-.inner {
-	display: flex;
-	flex-direction: column;
-	background-color: var(--color-purple);
-	color: var(--color-white);
-	padding: rem(15) rem(40) rem(30);
-	border-radius: rem(12);
-}
+	// .inner {
+	// 	display: flex;
+	// 	flex-direction: column;
+	// 	padding: rem(15) rem(40) rem(30);
+	// 	border-radius: rem(12);
+	// }
 
 .modalClose {
 	position: absolute;
