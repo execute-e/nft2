@@ -2,9 +2,9 @@
 
 .raffleContainer {
 	display: flex;
-	flex-direction: column; /* Вертикальное расположение на мобильных */
+	flex-direction: column;
 	width: 100%;
-	max-width: 500px; /* Ограничение ширины для мобильных */
+	max-width: 100%;
 	min-height: auto;
 	background-color: var(--color-white);
 	border-radius: 16px;
@@ -12,18 +12,31 @@
 	position: relative;
 	overflow: hidden;
 	font-family: var(--font-family-base);
-	margin: 20px; // Отступы на мобильных
+
+	// Убираем margin для модального окна
+	@media (max-width: 767px) {
+		border-radius: 0; 
+		max-height: 100vh;
+		overflow-y: auto;
+	}
 }
 
-/* --- 3. Панели (Форма и Инфо) --- */
+/* --- Панели (Форма и Инфо) --- */
 .formPanel {
-	padding: 30px 25px;
+	padding: 24px 20px;
 	color: var(--color-black);
-	order: 2; /* Форма будет второй (внизу) на мобильных */
+	order: 2;
+	width: 100%;
+	box-sizing: border-box;
+
+	form {
+		width: 100%;
+		max-width: 100%;
+	}
 }
 
 .infoPanel {
-	padding: 40px 25px;
+	padding: 30px 20px;
 	background-color: var(--color-purple);
 	background-image: linear-gradient(
 		135deg,
@@ -32,7 +45,34 @@
 	);
 	color: var(--color-white);
 	text-align: center;
-	order: 1; /* Инфо-панель будет первой (сверху) */
+	order: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	width: 100%;
+	box-sizing: border-box;
+	position: relative;
+}
+
+// Контейнер для картинки
+.imageContainer {
+	width: 100%;
+	max-width: 300px;
+	margin: 0 auto;
+
+	@media (max-width: 767px) {
+		max-width: 200px;
+	}
+}
+
+.infoPanelImage {
+	width: 100%;
+	height: auto;
+	object-fit: contain;
+	border-radius: 12px;
+	filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
 }
 
 .infoContent {
@@ -40,26 +80,30 @@
 	flex-direction: column;
 	align-items: center;
 	gap: 15px;
+	width: 100%;
+	max-width: 400px;
 
 	h3 {
 		font-family: var(--font-family-accent);
-		font-size: 2.5rem;
+		font-size: clamp(1.5rem, 4vw, 2.5rem);
 		font-weight: 400;
 		margin: 0;
 		line-height: 1.2;
 	}
+
 	p {
-		font-size: 0.9rem;
+		font-size: clamp(0.85rem, 2vw, 0.95rem);
 		line-height: 1.6;
 		max-width: 350px;
 		opacity: 0.9;
+		margin: 0;
 	}
 }
 
-/* --- 4. Элементы формы --- */
+/* --- Элементы формы --- */
 .formTitle {
 	font-family: var(--font-family-accent);
-	font-size: 2.2rem;
+	font-size: clamp(1.5rem, 5vw, 2.2rem);
 	font-weight: 400;
 	margin-bottom: 8px;
 	color: var(--color-black);
@@ -67,20 +111,21 @@
 }
 
 .formSubtitle {
-	font-size: 1rem;
-	margin-bottom: 30px;
+	font-size: clamp(0.9rem, 2.5vw, 1rem);
+	margin-bottom: 24px;
 	color: var(--color-black-80);
 	text-align: center;
 }
 
 .inputGroup {
-	margin-bottom: 20px;
+	margin-bottom: 18px;
 	text-align: left;
+	width: 100%;
 
 	label {
 		display: block;
 		margin-bottom: 8px;
-		font-size: 0.85rem;
+		font-size: clamp(0.8rem, 2vw, 0.85rem);
 		font-weight: 600;
 		color: var(--color-black-80);
 	}
@@ -90,9 +135,11 @@
 		border: 1px solid #e0e0e0;
 		padding: 12px 15px;
 		width: 100%;
+		box-sizing: border-box;
 		border-radius: 8px;
 		color: var(--color-black);
 		font-family: var(--font-family-base);
+		font-size: clamp(0.9rem, 2vw, 1rem);
 		transition: all var(--transition-duration);
 
 		&::placeholder {
@@ -110,35 +157,50 @@
 
 .error {
 	color: #d93025;
-	font-size: 0.8rem;
+	font-size: clamp(0.75rem, 2vw, 0.8rem);
 	font-weight: 500;
 	margin-top: 6px;
 }
 
-/* --- 5. Кнопки --- */
+/* --- Кнопки --- */
 .submitButton,
 .twitterButton,
 .discordLinkButton {
 	width: 100%;
 	border-radius: 8px;
 	border: none;
-	font-size: 1rem;
+	font-size: clamp(0.9rem, 2.5vw, 1rem);
 	font-weight: 600;
-	padding: 14px 0;
+	padding: 14px 20px;
 	cursor: pointer;
 	transition: all var(--transition-duration);
 	font-family: var(--font-family-base);
 	text-decoration: none;
 	text-align: center;
+	display: inline-block;
+	box-sizing: border-box;
+
+	// Улучшенная доступность для тач-устройств
+	@media (max-width: 767px) {
+		min-height: 48px;
+		padding: 12px 20px;
+	}
 }
 
 .submitButton {
-	background: var(--color-purple);
+	background: var(--color-pink);
 	color: var(--color-white);
+	margin-top: 8px;
+
 	&:hover:not(:disabled) {
 		transform: translateY(-2px);
 		box-shadow: 0 8px 20px rgba(153, 162, 255, 0.4);
 	}
+
+	&:active:not(:disabled) {
+		transform: translateY(0);
+	}
+
 	&:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
@@ -148,9 +210,14 @@
 .twitterButton {
 	background-color: #1da1f2;
 	color: #fff;
+
 	&:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 8px 20px rgba(29, 161, 242, 0.3);
+	}
+
+	&:active {
+		transform: translateY(0);
 	}
 }
 
@@ -158,9 +225,11 @@
 	border: 2px solid var(--color-white);
 	background-color: transparent;
 	color: var(--color-white);
-	padding: 12px 0;
-	width: 80%;
+	padding: 12px 20px;
+	width: 100%;
 	max-width: 250px;
+	box-sizing: border-box;
+
 	&:hover {
 		background-color: var(--color-white);
 		color: var(--color-purple);
@@ -171,25 +240,55 @@
 	background-color: #eaf5fd;
 	border: 1px solid #1da1f2;
 	color: #0c85d0;
-	padding: 12px;
+	padding: 12px 15px;
 	border-radius: 8px;
 	text-align: center;
 	font-weight: 500;
-	font-size: 0.9rem;
+	font-size: clamp(0.85rem, 2vw, 0.9rem);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
 }
 
-/* --- 6. Адаптивность для планшетов и десктопов --- */
+.checkmark {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+/* --- Адаптивность для планшетов --- */
+@media (min-width: 768px) and (max-width: 991px) {
+	.raffleContainer {
+		max-width: 700px;
+		margin: 0 auto;
+	}
+
+	.formPanel {
+		padding: 40px 40px;
+	}
+
+	.infoPanel {
+		padding: 40px 40px;
+	}
+
+	.imageContainer {
+		max-width: 250px;
+	}
+}
+
+/* --- Адаптивность для десктопов --- */
 @media (min-width: 992px) {
 	.raffleContainer {
-		flex-direction: row; /* Возвращаем горизонтальное расположение */
-		max-width: 950px; /* Увеличиваем ширину на больших экранах */
-		margin: 0; // Убираем внешние отступы
+		flex-direction: row;
+		max-width: 1000px;
+		margin: 0 auto;
+		min-height: 600px;
 	}
 
 	.formPanel {
 		flex: 1.2;
 		padding: 50px 60px;
-		order: 1; /* Форма теперь слева */
+		order: 1;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -197,11 +296,36 @@
 
 	.infoPanel {
 		flex: 1;
-		order: 2; /* Инфо-панель теперь справа */
+		order: 2;
+		padding: 50px 40px;
+		gap: 30px;
+	}
+
+	.imageContainer {
+		max-width: 350px;
 	}
 
 	.formTitle,
 	.formSubtitle {
 		text-align: left;
+	}
+
+	.inputGroup {
+		margin-bottom: 22px;
+	}
+}
+
+/* --- Адаптивность для больших экранов --- */
+@media (min-width: 1200px) {
+	.raffleContainer {
+		max-width: 1100px;
+	}
+
+	.formPanel {
+		padding: 60px 70px;
+	}
+
+	.imageContainer {
+		max-width: 400px;
 	}
 }

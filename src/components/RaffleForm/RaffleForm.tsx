@@ -12,15 +12,22 @@ type TwitterUser = {
 type FormInputs = {
 	discordUsername: string
 	walletAddress: string
+}	
+
+// --- Props ---
+interface RaffleFormProps {
+	imageUrl?: string // Опциональный URL картинки для правой панели
+	onSubmitSuccess?: (data: any) => void // Callback при успешной отправке
 }
 
 // --- Component ---
-export const RaffleForm = () => {
+export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 	const [twitterUser, setTwitterUser] = useState<TwitterUser | null>(null)
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
+		reset,
 	} = useForm<FormInputs>({
 		mode: 'onBlur',
 	})
@@ -30,6 +37,7 @@ export const RaffleForm = () => {
 	// Simulates the Twitter OAuth login flow
 	const handleTwitterLogin = async () => {
 		console.log('Opening Twitter auth window...')
+		// TODO: Подключить реальный OAuth Twitter
 		await new Promise(resolve => setTimeout(resolve, 1500))
 		setTwitterUser({ username: 'gemini_dev', id: '54321' })
 		console.log('Twitter login successful!')
@@ -48,11 +56,33 @@ export const RaffleForm = () => {
 			wallet: data.walletAddress,
 		}
 
-		console.log('Submitting data to backend:', payload)
-		await new Promise(resolve => setTimeout(resolve, 2000))
+		try {
+			console.log('Submitting data to backend:', payload)
 
-		alert(`Thank you for entering, @${payload.twitter.username}!`)
-		// Here you might want to reset the form or close the modal
+			// TODO: Заменить на реальный API запрос
+			// const response = await fetch('/api/raffle/submit', {
+			//   method: 'POST',
+			//   headers: { 'Content-Type': 'application/json' },
+			//   body: JSON.stringify(payload)
+			// })
+			// const result = await response.json()
+
+			await new Promise(resolve => setTimeout(resolve, 2000))
+
+			alert(`Thank you for entering, @${payload.twitter.username}!`)
+
+			// Вызываем callback если передан
+			if (onSubmitSuccess) {
+				onSubmitSuccess(payload)
+			}
+
+			// Опционально: сброс формы после успешной отправки
+			reset()
+			setTwitterUser(null)
+		} catch (error) {
+			console.error('Submission error:', error)
+			alert('Something went wrong. Please try again.')
+		}
 	}
 
 	return (
@@ -69,7 +99,8 @@ export const RaffleForm = () => {
 						<label>Step 1: Connect Twitter</label>
 						{twitterUser ? (
 							<div className={styles.twitterSuccess}>
-								<span>✓</span> Connected as @{twitterUser.username}
+								<span className={styles.checkmark}>✓</span> Connected as @
+								{twitterUser.username}
 							</div>
 						) : (
 							<button
@@ -130,6 +161,15 @@ export const RaffleForm = () => {
 
 			{/* --- Right Panel: Information & Art --- */}
 			<div className={styles.infoPanel}>
+				{imageUrl && (
+					<div className={styles.imageContainer}>
+						<img
+							src={imageUrl}
+							alt='Giveaway art'
+							className={styles.infoPanelImage}
+						/>
+					</div>
+				)}
 				<div className={styles.infoContent}>
 					<h3>A quick heads-up!</h3>
 					<p>

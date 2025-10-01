@@ -1,6 +1,14 @@
 @use '../../styles/helpers' as *;
 
 .modal {
+	overflow: auto;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE и Edge */
+
+	&::-webkit-scrollbar {
+		/* Chrome, Safari */
+		display: none;
+	}
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -8,7 +16,7 @@
 	margin: 0;
 	padding: 0;
 	border: none;
-	border-radius: rem(12);
+	border-radius: rem(17);
 	display: block;
 	opacity: 0;
 	visibility: hidden;
@@ -27,12 +35,12 @@
 	}
 }
 
-	// .inner {
-	// 	display: flex;
-	// 	flex-direction: column;
-	// 	padding: rem(15) rem(40) rem(30);
-	// 	border-radius: rem(12);
-	// }
+// .inner {
+// 	display: flex;
+// 	flex-direction: column;
+// 	padding: rem(15) rem(40) rem(30);
+// 	border-radius: rem(12);
+// }
 
 .modalClose {
 	position: absolute;
