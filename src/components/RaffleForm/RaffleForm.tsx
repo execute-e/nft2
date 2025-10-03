@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form'
 import type { SubmitHandler } from 'react-hook-form'
 import styles from './index.module.scss'
 import xIcon from './images/x.svg'
+import ModalWindow from '../ModalWindow/ModalWindow'
+import WinnersTable from '../WinnersTable/WinnersTable'
 
 type TwitterUser = {
 	username: string
@@ -19,7 +21,6 @@ interface RaffleFormProps {
 	onSubmitSuccess?: (data: any) => void
 }
 
-// --- Component ---
 export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 	const [twitterUser, setTwitterUser] = useState<TwitterUser | null>(null)
 	const {
@@ -30,8 +31,7 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 	} = useForm<FormInputs>({
 		mode: 'onBlur',
 	})
-
-	// --- Handlers ---
+	const [isOpen, setIsOpen] = useState<boolean>(false)
 
 	const handleTwitterLogin = async () => {
 		console.log('Opening Twitter auth window...')
@@ -187,15 +187,15 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 					>
 						Join Discord Now
 					</a>
-					<p>Or check the winners results!</p>
-					<a
-						href='https://discord.gg/the-monicorns'
-						target='_blank'
-						rel='noopener noreferrer'
-						className={styles.discordLinkButton}
-					>
+					<p>Or check the GA winners results!</p>
+					<a 
+						onClick={() => setIsOpen(true)}
+						rel='noopener noreferrer' className={styles.discordLinkButton}>
 						Open Winners Table
 					</a>
+					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
+						<WinnersTable />
+					</ModalWindow>
 				</div>
 			</div>
 		</div>

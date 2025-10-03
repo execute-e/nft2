@@ -179,7 +179,6 @@
 	display: inline-block;
 	box-sizing: border-box;
 
-	// Улучшенная доступность для тач-устройств
 	@media (max-width: 767px) {
 		min-height: 48px;
 		padding: 12px 20px;
