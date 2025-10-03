@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"github.com/ItsXomyak/internal/config"
@@ -20,20 +21,20 @@ import (
 )
 
 func main() {
-	cfg, err := config.Load()
+	Cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
 	ctx := context.Background()
-	logger.Init(cfg.LogLevel)
+	logger.Init(Cfg.LogLevel)
 	
 	pgConfig := &postgres.Config{
 		MaxPoolSize:  20,
 		ConnAttempts: 5,
 		ConnTimeout:  5 * time.Second,
 	}
-		pg, err := postgres.New(ctx, cfg.DB.DSN, pgConfig)
+		pg, err := postgres.New(ctx, Cfg.DB.DSN, pgConfig)
 		if err != nil {
 			log.Fatalf("failed to connect to postgres: %v", err)
 			}
@@ -44,22 +45,26 @@ func main() {
 		userRepo := repository.NewUserRepository(pg.Pool)
 		winnerRepo := repository.NewWinnerRepository(pg.Pool)
 
-		twitterClient := twitter.NewClient(cfg.Twitter.APIKey, cfg.Twitter.APISecret, cfg.CallbackURL)
+		twitterClient := twitter.NewClient(Cfg.Twitter.APIKey, Cfg.Twitter.APISecret, Cfg.CallbackURL)
 
 		authService := usecase.NewAuthService( twitterClient)
 		raffleService := usecase.NewRaffleService(userRepo, winnerRepo)
 
 		handler := http.NewHandler(authService, raffleService)
 		
-
 		router := gin.Default()
 
-		http.RegisterRoutes(router, handler, cfg.AdminToken, cfg.SessionSecret)
+		config := cors.DefaultConfig()
+    config.AllowOrigins = []string{Cfg.FrontendURL}
+    config.AllowCredentials = true 
+    router.Use(cors.New(config))
 
-		log.Printf("Server is running on port %s", cfg.ServerPort)
+		http.RegisterRoutes(router, handler, Cfg.AdminToken, Cfg.SessionSecret)
+
+		log.Printf("Server is running on port %s", Cfg.ServerPort)
 		
 		go func() {
-			if err := router.Run(":" + cfg.ServerPort); err != nil {
+			if err := router.Run(":" + Cfg.ServerPort); err != nil {
 				log.Fatalf("failed to start server: %v", err)
 			}
 		}()

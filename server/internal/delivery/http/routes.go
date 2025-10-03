@@ -15,8 +15,9 @@ func RegisterRoutes(router *gin.Engine, h *Handler, adminToken, sessionSecret st
 	{
 		authGroup.GET("/login", h.TwitterLogin) // GET /auth/twitter/login
 		authGroup.GET("/callback", h.TwitterCallback) // GET /auth/twitter/callback
+		authGroup.GET("/status", h.AuthStatus)	// GET /auth/twitter/status
 	}
-
+	
 	raffleGroup := router.Group("/raffle")
 	{
 		raffleGroup.POST("/register", h.RegisterForRaffle) // POST /raffle/register

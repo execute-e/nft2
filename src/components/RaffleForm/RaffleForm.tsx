@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import type { SubmitHandler } from 'react-hook-form'
 import styles from './index.module.scss'
@@ -19,70 +19,95 @@ type FormInputs = {
 interface RaffleFormProps {
 	imageUrl?: string
 	onSubmitSuccess?: (data: any) => void
+	initialTwitterUser?: TwitterUser | null
 }
 
-export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
-	const [twitterUser, setTwitterUser] = useState<TwitterUser | null>(null)
+export const RaffleForm = ({
+	imageUrl,
+	onSubmitSuccess,
+	initialTwitterUser, 
+}: RaffleFormProps) => {
+	const [twitterUser, setTwitterUser] = useState<TwitterUser | null>(
+		initialTwitterUser || null
+	)
+
+	const savedData = sessionStorage.getItem('raffleFormData')
+	const initialValues = savedData
+		? JSON.parse(savedData)
+		: { discordUsername: '', walletAddress: '' }
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
 		reset,
+		watch,
 	} = useForm<FormInputs>({
-		mode: 'onBlur',
+		defaultValues: initialValues,
 	})
+
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
-	const handleTwitterLogin = async () => {
-		console.log('Opening Twitter auth window...')
-		// TODO: Подключить реальный OAuth Twitter
-		await new Promise(resolve => setTimeout(resolve, 1500))
-		setTwitterUser({ username: 'gemini_dev', id: '54321' })
-		console.log('Twitter login successful!')
+	useEffect(() => {
+		if (initialTwitterUser) {
+			setTwitterUser(initialTwitterUser)
+		}
+	}, [initialTwitterUser])
+
+	useEffect(() => {
+		const subscription = watch(value => {
+			sessionStorage.setItem('raffleFormData', JSON.stringify(value))
+		})
+		return () => subscription.unsubscribe()
+	}, [watch])
+
+	const handleTwitterLogin = () => {
+		const returnPath = window.location.pathname
+		const loginUrl = `http://localhost:8080/auth/twitter/login?redirect_to=${encodeURIComponent(
+			returnPath
+		)}`
+		window.location.href = loginUrl
 	}
 
-	// Handles the final form submission
 	const onSubmit: SubmitHandler<FormInputs> = async data => {
 		if (!twitterUser) {
 			alert('Please connect your Twitter account first.')
 			return
 		}
 
-		const payload = {
-			twitter: twitterUser,
-			discord: data.discordUsername,
-			wallet: data.walletAddress,
-		}
-
 		try {
-			console.log('Submitting data to backend:', payload)
+			const response = await fetch('http://localhost:8080/raffle/register', {
+				// TODO: заменить на реальный URL
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify({
+					discord_username: data.discordUsername,
+					wallet_address: data.walletAddress,
+				}),
+			})
 
-			// TODO: Заменить на реальный API запрос
-			// const response = await fetch('/api/raffle/submit', {
-			//   method: 'POST',
-			//   headers: { 'Content-Type': 'application/json' },
-			//   body: JSON.stringify(payload)
-			// })
-			// const result = await response.json()
-
-			await new Promise(resolve => setTimeout(resolve, 2000))
-
-			alert(`Thank you for entering, @${payload.twitter.username}!`)
-
-			// Вызываем callback если передан
-			if (onSubmitSuccess) {
-				onSubmitSuccess(payload)
+			if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || 'Server responded with an error')
 			}
 
-			// Опционально: сброс формы после успешной отправки
+			const result = await response.json()
+			console.log('Submission successful:', result)
+			alert('Thank you for entering!')
+
+			if (onSubmitSuccess) {
+				onSubmitSuccess(result)
+			}
+
+			sessionStorage.removeItem('raffleFormData')
 			reset()
 			setTwitterUser(null)
-		} catch (error) {
+		} catch (error: any) {
 			console.error('Submission error:', error)
-			alert('Something went wrong. Please try again.')
+			alert(error.message)
 		}
 	}
-
 	return (
 		<div className={styles.raffleContainer}>
 			<div className={styles.formPanel}>
@@ -188,9 +213,11 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 						Join Discord Now
 					</a>
 					<p>Or check the GA winners results!</p>
-					<a 
+					<a
 						onClick={() => setIsOpen(true)}
-						rel='noopener noreferrer' className={styles.discordLinkButton}>
+						rel='noopener noreferrer'
+						className={styles.discordLinkButton}
+					>
 						Open Winners Table
 					</a>
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>

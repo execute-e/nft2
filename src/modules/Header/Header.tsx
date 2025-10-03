@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styles from './index.module.scss'
 import logo from './images/logo.svg'
 import { BurgerMenuContext } from '@/context'
@@ -8,10 +8,44 @@ import ModalWindow from '@/components/ModalWindow/ModalWindow'
 import RaffleForm from '@/components/RaffleForm/RaffleForm'
 import WinnersTable from '@/components/WinnersTable/WinnersTable'
 
+type TwitterUser = {
+	username: string
+	id: string
+}
+
 const Header: React.FC = () => {
 	const { active, setActive } = useContext(BurgerMenuContext)
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const [isOpenW, setIsOpenW] = useState<boolean>(false)
+	const [initialTwitterUser, setInitialTwitterUser] =
+		useState<TwitterUser | null>(null)
+	useEffect(() => {
+		const checkAuthAndOpenModal = async () => {
+			try {
+				const response = await fetch(
+					'http://localhost:8080/auth/twitter/status',
+					{
+						credentials: 'include',
+					}
+				)
+
+				if (response.ok) {
+					const userData = await response.json()
+					// Сохраняем данные пользователя, чтобы передать их в форму
+					setInitialTwitterUser({
+						username: userData.TwitterUsername,
+						id: userData.TwitterID,
+					})
+					// АВТОМАТИЧЕСКИ ОТКРЫВАЕМ МОДАЛЬНОЕ ОКНО
+					setIsOpen(true)
+				}
+			} catch (error) {
+				console.error('User not logged in on initial load:', error)
+			}
+		}
+
+		checkAuthAndOpenModal()
+	}, [])
 
 	return (
 		<>
@@ -150,10 +184,7 @@ const Header: React.FC = () => {
 							</a>
 						</li>
 						<li className={styles.listItem}>
-							<a
-								onClick={() => setIsOpenW(true)}
-								className={styles.link}
-							>
+							<a onClick={() => setIsOpenW(true)} className={styles.link}>
 								<Magnet padding={50} disabled={false} magnetStrength={15}>
 									<GradientText
 										colors={[
@@ -182,7 +213,7 @@ const Header: React.FC = () => {
 					</Magnet>
 
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
-						<RaffleForm />
+						<RaffleForm initialTwitterUser={initialTwitterUser} />
 					</ModalWindow>
 
 					<ModalWindow isOpen={isOpenW} onClose={() => setIsOpenW(false)}>

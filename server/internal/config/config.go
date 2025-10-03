@@ -10,6 +10,7 @@ import (
 type Config struct {
 	ServerPort     string
 	CallbackURL    string
+	FrontendURL    string
 	SessionSecret  string
 	AdminToken     string
 	DB             DBConfig
@@ -39,6 +40,7 @@ func Load() (*Config, error) {
 
 	return &Config{
 		ServerPort:     os.Getenv("SERVER_PORT"),
+		FrontendURL:    os.Getenv("FRONTEND_URL"),
 		CallbackURL:    os.Getenv("CALLBACK_URL"),
 		SessionSecret:  os.Getenv("SESSION_SECRET"),
 		AdminToken:     os.Getenv("ADMIN_TOKEN"),
