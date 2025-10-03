@@ -6,10 +6,12 @@ import GradientText from '@/components/GradientText/GradientText'
 import Magnet from '@/components/Magnet/Magnet'
 import ModalWindow from '@/components/ModalWindow/ModalWindow'
 import RaffleForm from '@/components/RaffleForm/RaffleForm'
+import WinnersTable from '@/components/WinnersTable/WinnersTable'
 
 const Header: React.FC = () => {
 	const { active, setActive } = useContext(BurgerMenuContext)
 	const [isOpen, setIsOpen] = useState<boolean>(false)
+	const [isOpenW, setIsOpenW] = useState<boolean>(false)
 
 	return (
 		<>
@@ -147,6 +149,29 @@ const Header: React.FC = () => {
 								</Magnet>
 							</a>
 						</li>
+						<li className={styles.listItem}>
+							<a
+								onClick={() => setIsOpenW(true)}
+								className={styles.link}
+							>
+								<Magnet padding={50} disabled={false} magnetStrength={15}>
+									<GradientText
+										colors={[
+											'#EE6D83',
+											'#f569a3ff',
+											'#fb8fbcff',
+											'#e64487ff',
+											'#ff006aff',
+										]}
+										animationSpeed={3}
+										showBorder={false}
+										className={styles.title}
+									>
+										Winners
+									</GradientText>
+								</Magnet>
+							</a>
+						</li>
 					</ul>
 				</nav>
 				<div className={styles.buttonOverlay}>
@@ -158,6 +183,10 @@ const Header: React.FC = () => {
 
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
 						<RaffleForm />
+					</ModalWindow>
+
+					<ModalWindow isOpen={isOpenW} onClose={() => setIsOpenW(false)}>
+						<WinnersTable />
 					</ModalWindow>
 
 					<button

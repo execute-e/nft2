@@ -1,0 +1,224 @@
+@use '../../styles/helpers' as *;
+
+.title {
+	text-align: center;
+	margin-top: rem(10);
+	margin-bottom: 30px;
+	font-size: 2rem;
+	font-weight: 700;
+	background: linear-gradient(135deg, #9f66ea 0%, #ff40e9 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	letter-spacing: -0.5px;
+	animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+	from {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.contentWrapper {
+	max-height: 60vh;
+	overflow-y: auto;
+	padding-right: 8px;
+
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: #f1f1f1;
+		border-radius: 10px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		border-radius: 10px;
+
+		&:hover {
+			background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+		}
+	}
+}
+
+.loading,
+.error,
+.empty {
+	text-align: center;
+	padding: 60px 20px;
+	font-size: 1.2rem;
+	color: #666;
+	animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.error {
+	color: #e74c3c;
+	font-weight: 500;
+}
+
+.WinnersTable {
+  padding-left: rem(8);
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: #fff;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+	animation: slideUp 0.5s ease-out;
+
+	th,
+	td {
+		padding: 18px 20px;
+		text-align: left;
+	}
+
+	th {
+		background: linear-gradient(135deg, #dc449f 0%, #764ba2 100%);
+		color: #fff;
+		font-weight: 600;
+		font-size: 0.95rem;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+
+		&:first-child {
+			border-top-left-radius: 12px;
+		}
+
+		&:last-child {
+			border-top-right-radius: 12px;
+		}
+	}
+
+	td {
+		border-bottom: 1px solid #e8e8e8;
+		font-size: 0.95rem;
+		color: #444;
+		transition: all 0.3s ease;
+
+		&:first-child {
+			font-weight: 600;
+			color: #667eea;
+			font-size: 1rem;
+		}
+
+		&:last-child {
+			font-family: 'Courier New', monospace;
+			font-size: 0.85rem;
+			color: #666;
+			word-break: break-all;
+		}
+	}
+
+	tbody tr {
+		transition: all 0.3s ease;
+		background: #fff;
+
+		&:hover {
+			background: linear-gradient(90deg, #f8f9ff 0%, #fff 100%);
+			transform: scale(1.01);
+			box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+		}
+
+		&:last-child td {
+			border-bottom: none;
+		}
+
+		animation: fadeInRow 0.4s ease-out backwards;
+
+		@for $i from 1 through 20 {
+			&:nth-child(#{$i}) {
+				animation-delay: #{$i * 0.05}s;
+			}
+		}
+	}
+
+	a {
+		color: #667eea;
+		text-decoration: none;
+		font-weight: 500;
+		position: relative;
+		transition: color 0.3s ease;
+
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: -2px;
+			left: 0;
+			width: 0;
+			height: 2px;
+			background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+			transition: width 0.3s ease;
+		}
+
+		&:hover {
+			color: #764ba2;
+
+			&::after {
+				width: 100%;
+			}
+		}
+	}
+}
+
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadeInRow {
+	from {
+		opacity: 0;
+		transform: translateX(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+	.title {
+		font-size: 1.5rem;
+		margin-bottom: 20px;
+	}
+
+	.WinnersTable {
+		th,
+		td {
+			padding: 12px 10px;
+			font-size: 0.85rem;
+		}
+
+		td:last-child {
+			font-size: 0.75rem;
+		}
+	}
+}

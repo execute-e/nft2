@@ -3,13 +3,22 @@ import firstVector from './images/vector1.svg'
 import secondVector from './images/vector2.svg'
 import styles from './index.module.scss'
 import GradientText from '../../components/GradientText/GradientText'
+import { useState } from 'react'
+import ModalWindow from '../../components/ModalWindow/ModalWindow'
+import RaffleForm from '../../components/RaffleForm/RaffleForm'
 
 const Hero: React.FC = () => {
+	const [isOpen, setIsOpen] = useState<boolean>(false)
 	return (
 		<section id='hero' className={'container ' + styles.hero}>
 			<div className={styles.image}></div>
 			<div className={styles.info}>
-				<button className={styles.button}>Check eligable</button>
+				<button onClick={() => setIsOpen(true)} className={styles.button}>
+					Check eligable
+				</button>
+				<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
+					<RaffleForm />
+				</ModalWindow>
 				<p id='about-us' className={styles.text}>
 					Welcome to a place where the asphalt burns with skateboards and the
 					air is filled with dreams — this is the Monicorns family. The idea of

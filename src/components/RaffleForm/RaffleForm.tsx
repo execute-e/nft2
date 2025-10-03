@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type { SubmitHandler } from 'react-hook-form'
 import styles from './index.module.scss'
+import xIcon from './images/x.svg'
 
-// --- Type Definitions ---
 type TwitterUser = {
 	username: string
 	id: string
@@ -12,12 +12,11 @@ type TwitterUser = {
 type FormInputs = {
 	discordUsername: string
 	walletAddress: string
-}	
+}
 
-// --- Props ---
 interface RaffleFormProps {
-	imageUrl?: string // Опциональный URL картинки для правой панели
-	onSubmitSuccess?: (data: any) => void // Callback при успешной отправке
+	imageUrl?: string
+	onSubmitSuccess?: (data: any) => void
 }
 
 // --- Component ---
@@ -34,7 +33,6 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 
 	// --- Handlers ---
 
-	// Simulates the Twitter OAuth login flow
 	const handleTwitterLogin = async () => {
 		console.log('Opening Twitter auth window...')
 		// TODO: Подключить реальный OAuth Twitter
@@ -87,76 +85,81 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 
 	return (
 		<div className={styles.raffleContainer}>
-			{/* --- Left Panel: The Form --- */}
 			<div className={styles.formPanel}>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<h2 className={styles.formTitle}>Join the Giveaway</h2>
-					<p className={styles.formSubtitle}>
-						Complete the steps below to enter.
-					</p>
+				<div className={styles.formOverlay}>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<h2 className={styles.formTitle}>Join the Giveaway</h2>
+						<p className={styles.formSubtitle}>
+							Complete the steps below to enter.
+						</p>
 
-					<div className={styles.inputGroup}>
-						<label>Step 1: Connect Twitter</label>
-						{twitterUser ? (
-							<div className={styles.twitterSuccess}>
-								<span className={styles.checkmark}>✓</span> Connected as @
-								{twitterUser.username}
-							</div>
-						) : (
-							<button
-								type='button'
-								onClick={handleTwitterLogin}
-								className={styles.twitterButton}
-							>
-								Connect with Twitter
-							</button>
-						)}
-					</div>
+						<div className={styles.inputGroup}>
+							<label>Step 1: Log in via X</label>
+							{twitterUser ? (
+								<div className={styles.twitterSuccess}>
+									<span className={styles.checkmark}>✓</span> Connected as @
+									{twitterUser.username}
+								</div>
+							) : (
+								<button
+									type='button'
+									onClick={handleTwitterLogin}
+									className={styles.twitterButton}
+								>
+									Connect with <img src={xIcon} alt='X' />
+								</button>
+							)}
+						</div>
 
-					<div className={styles.inputGroup}>
-						<label htmlFor='discord'>Step 2: Enter your Discord ID</label>
-						<input
-							id='discord'
-							placeholder='e.g., username#1234'
-							{...register('discordUsername', {
-								required: 'Your Discord ID is required.',
-								pattern: {
-									value: /^[a-zA-Z0-9_.]{2,32}$/,
-									message: 'Invalid format. Example: username#1234',
-								},
-							})}
-						/>
-						{errors.discordUsername && (
-							<p className={styles.error}>{errors.discordUsername.message}</p>
-						)}
-					</div>
+						<div className={styles.inputGroup}>
+							<label htmlFor='discord'>
+								Step 2: Enter your Discord nickname
+							</label>
+							<input
+								id='discord'
+								placeholder='e.g., liteplay2'
+								{...register('discordUsername', {
+									required: 'Your Discord nickname is required.',
+									pattern: {
+										value: /^[a-zA-Z0-9_.]{2,32}$/,
+										message: 'Invalid format. Example: liteplay2',
+									},
+								})}
+							/>
+							{errors.discordUsername && (
+								<p className={styles.error}>{errors.discordUsername.message}</p>
+							)}
+						</div>
 
-					<div className={styles.inputGroup}>
-						<label htmlFor='wallet'>Step 3: Provide your Wallet Address</label>
-						<input
-							id='wallet'
-							placeholder='0x...'
-							{...register('walletAddress', {
-								required: 'A wallet address is required.',
-								pattern: {
-									value: /^0x[a-fA-F0-9]{40}$/,
-									message: 'Invalid wallet address format.',
-								},
-							})}
-						/>
-						{errors.walletAddress && (
-							<p className={styles.error}>{errors.walletAddress.message}</p>
-						)}
-					</div>
+						<div className={styles.inputGroup}>
+							<label htmlFor='wallet'>
+								Step 3: Provide your Wallet Address
+							</label>
+							<input
+								id='wallet'
+								placeholder='0x...'
+								{...register('walletAddress', {
+									required: 'A wallet address is required.',
+									pattern: {
+										value: /^0x[a-fA-F0-9]{40}$/,
+										message: 'Invalid wallet address format.',
+									},
+								})}
+							/>
+							{errors.walletAddress && (
+								<p className={styles.error}>{errors.walletAddress.message}</p>
+							)}
+						</div>
 
-					<button
-						type='submit'
-						disabled={isSubmitting}
-						className={styles.submitButton}
-					>
-						{isSubmitting ? 'Submitting...' : 'Enter Giveaway'}
-					</button>
-				</form>
+						<button
+							type='submit'
+							disabled={isSubmitting}
+							className={styles.submitButton}
+						>
+							{isSubmitting ? 'Submitting...' : 'Enter Giveaway'}
+						</button>
+					</form>
+				</div>
 			</div>
 
 			{/* --- Right Panel: Information & Art --- */}
@@ -177,12 +180,21 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 						so make sure you're in the community!
 					</p>
 					<a
-						href='https://discord.com/' // Replace with your actual Discord invite link
+						href='https://discord.gg/the-monicorns'
 						target='_blank'
 						rel='noopener noreferrer'
 						className={styles.discordLinkButton}
 					>
 						Join Discord Now
+					</a>
+					<p>Or check the winners results!</p>
+					<a
+						href='https://discord.gg/the-monicorns'
+						target='_blank'
+						rel='noopener noreferrer'
+						className={styles.discordLinkButton}
+					>
+						Open Winners Table
 					</a>
 				</div>
 			</div>
