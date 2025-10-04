@@ -1,15 +1,33 @@
 package http
 
 import (
+	"embed"
+	"io/fs"
+	"log"
+	"net/http"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
+//go:embed static/admin/*
+var adminFS embed.FS
+
 func RegisterRoutes(router *gin.Engine, h *Handler, adminToken, sessionSecret string) {
 	// Сессии
 	store := cookie.NewStore([]byte(sessionSecret))
 	router.Use(sessions.Sessions("mysession", store))
+
+	adminPanelGroup := router.Group("/admin-panel", BasicAuth())
+	{
+		subFS, err := fs.Sub(adminFS, "static/admin")
+		if err != nil {
+			log.Fatal("failed to create subFS for admin panel:", err)
+		}
+		// Отдаем файлы из встроенной файловой системы
+		adminPanelGroup.StaticFS("/", http.FS(subFS))
+	}
 
 	authGroup := router.Group("/auth/twitter")
 	{

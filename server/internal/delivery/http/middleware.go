@@ -1,7 +1,9 @@
 package http
 
 import (
+	"crypto/subtle"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -29,5 +31,25 @@ func AdminAuth(adminToken string) gin.HandlerFunc {
 		}
 
 		c.Next()
+	}
+}
+
+func BasicAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user, pass, hasAuth := c.Request.BasicAuth()
+
+		expectedUser := os.Getenv("BASIC_AUTH_USERNAME")
+		expectedPass := os.Getenv("BASIC_AUTH_PASSWORD")
+
+		// чтобы избежать timing attacks
+		userMatch := (subtle.ConstantTimeCompare([]byte(user), []byte(expectedUser)) == 1)
+		passMatch := (subtle.ConstantTimeCompare([]byte(pass), []byte(expectedPass)) == 1)
+
+		if hasAuth && userMatch && passMatch {
+			c.Next()
+		} else {
+			c.Header("WWW-Authenticate", `Basic realm="Restricted"`)
+			c.AbortWithStatus(http.StatusUnauthorized)
+		}
 	}
 }
