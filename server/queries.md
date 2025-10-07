@@ -13,7 +13,7 @@ INSERT INTO users (twitter_id, twitter_username, twitter_created_at, discord_use
 ### **Регистрация нового участника**
 
 ```bash
-curl -X POST ${import.meta.env.VITE_API_BASE_URL}/raffle/register \
+curl -X POST https://the-monicorns-production.up.railway.app/raffle/register \
 -H "Content-Type: application/json" \
 -H "Cookie: user_session=<SESSION_COOKIE>" \
 -d '{
@@ -35,14 +35,14 @@ curl -X POST ${import.meta.env.VITE_API_BASE_URL}/raffle/register \
 ### **Получить список всех участников**
 
 ```bash
-curl -X GET ${import.meta.env.VITE_API_BASE_URL}/admin/participants \
+curl -X GET https://the-monicorns-production.up.railway.app/admin/participants \
 -H "Authorization: Bearer admin"
 ```
 
 ### **Очистить таблицу участников**
 
 ```bash
-curl -X DELETE ${import.meta.env.VITE_API_BASE_URL}/admin/participants \
+curl -X DELETE https://the-monicorns-production.up.railway.app/admin/participants \
 -H "Authorization: Bearer admin"
 ```
 
@@ -51,14 +51,14 @@ curl -X DELETE ${import.meta.env.VITE_API_BASE_URL}/admin/participants \
 Замените `:id` (например, `1`) на реальный ID участника.
 
 ```bash
-curl -X DELETE ${import.meta.env.VITE_API_BASE_URL}/admin/participants/1 \
+curl -X DELETE https://the-monicorns-production.up.railway.app/admin/participants/1 \
 -H "Authorization: Bearer admin"
 ```
 
 ### **Выбрать и назначить победителей**
 
 ```bash
-curl -X POST ${import.meta.env.VITE_API_BASE_URL}/admin/winners \
+curl -X POST https://the-monicorns-production.up.railway.app/admin/winners \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer admin" \
 -d '{
@@ -69,14 +69,14 @@ curl -X POST ${import.meta.env.VITE_API_BASE_URL}/admin/winners \
 ### **Очистить таблицу победителей**
 
 ```bash
-curl -X DELETE ${import.meta.env.VITE_API_BASE_URL}/admin/winners \
+curl -X DELETE https://the-monicorns-production.up.railway.app/admin/winners \
 -H "Authorization: Bearer admin"
 ```
 
 ### **Получить список всех победителей**
 
 ```bash
-curl -X GET ${import.meta.env.VITE_API_BASE_URL}/admin/winners \
+curl -X GET https://the-monicorns-production.up.railway.app/admin/winners \
 -H "Authorization: Bearer admin"
 ```
 
@@ -85,6 +85,6 @@ curl -X GET ${import.meta.env.VITE_API_BASE_URL}/admin/winners \
 Замените `:id` (например, `1`) на реальный ID победителя.
 
 ```bash
-curl -X DELETE ${import.meta.env.VITE_API_BASE_URL}/admin/winners/1 \
+curl -X DELETE https://the-monicorns-production.up.railway.app/admin/winners/1 \
 -H "Authorization: Bearer admin"
 ```
