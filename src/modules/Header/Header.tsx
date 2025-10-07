@@ -7,6 +7,7 @@ import Magnet from '@/components/Magnet/Magnet'
 import ModalWindow from '@/components/ModalWindow/ModalWindow'
 import RaffleForm from '@/components/RaffleForm/RaffleForm'
 import WinnersTable from '@/components/WinnersTable/WinnersTable'
+import SuccessWindow from '@/components/FinalResModal/SuccessPassModal'
 
 type TwitterUser = {
 	username: string
@@ -17,6 +18,7 @@ const Header: React.FC = () => {
 	const { active, setActive } = useContext(BurgerMenuContext)
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const [isOpenW, setIsOpenW] = useState<boolean>(false)
+	const [isOpenS, setIsOpenS] = useState<boolean>(false)
 	const [initialTwitterUser, setInitialTwitterUser] =
 		useState<TwitterUser | null>(null)
 	useEffect(() => {
@@ -36,16 +38,21 @@ const Header: React.FC = () => {
 						username: userData.TwitterUsername,
 						id: userData.TwitterID,
 					})
-					// АВТОМАТИЧЕСКИ ОТКРЫВАЕМ МОДАЛЬНОЕ ОКНО
 					setIsOpen(true)
 				}
 			} catch (error) {
-				console.error('User not logged in on initial load:', error)
+				// console.error('User not logged in on initial load:', error)
 			}
 		}
 
 		checkAuthAndOpenModal()
 	}, [])
+
+	const handleRaffleSuccess = (result: any) => {
+		console.log(`Result: ${result}`)
+		setIsOpen(false)
+		setIsOpenS(true)
+	}
 
 	return (
 		<>
@@ -143,7 +150,7 @@ const Header: React.FC = () => {
 								</Magnet>
 							</a>
 						</li>
-						<li className={styles.listItem}>
+						{/* <li className={styles.listItem}>
 							<a href='#sneak-peek' className={styles.link}>
 								<Magnet padding={50} disabled={false} magnetStrength={15}>
 									<GradientText
@@ -162,7 +169,7 @@ const Header: React.FC = () => {
 									</GradientText>
 								</Magnet>
 							</a>
-						</li>
+						</li> */}
 						<li className={styles.listItem}>
 							<a href='#collabs' className={styles.link}>
 								<Magnet padding={50} disabled={false} magnetStrength={15}>
@@ -203,6 +210,26 @@ const Header: React.FC = () => {
 								</Magnet>
 							</a>
 						</li>
+						<li className={styles.listItem}>
+							<a onClick={() => setIsOpenS(true)} className={styles.link}>
+								<Magnet padding={50} disabled={false} magnetStrength={15}>
+									<GradientText
+										colors={[
+											'#EE6D83',
+											'#f569a3ff',
+											'#fb8fbcff',
+											'#e64487ff',
+											'#ff006aff',
+										]}
+										animationSpeed={3}
+										showBorder={false}
+										className={styles.title}
+									>
+										Share
+									</GradientText>
+								</Magnet>
+							</a>
+						</li>
 					</ul>
 				</nav>
 				<div className={styles.buttonOverlay}>
@@ -213,12 +240,20 @@ const Header: React.FC = () => {
 					</Magnet>
 
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
-						<RaffleForm initialTwitterUser={initialTwitterUser} />
+						<RaffleForm
+							initialTwitterUser={initialTwitterUser}
+							onSubmitSuccess={handleRaffleSuccess}
+						/>
 					</ModalWindow>
 
 					<ModalWindow isOpen={isOpenW} onClose={() => setIsOpenW(false)}>
 						<WinnersTable />
 					</ModalWindow>
+
+					<SuccessWindow
+						isOpen={isOpenS}
+						onClose={() => setIsOpenS(false)}
+					></SuccessWindow>
 
 					<button
 						className={styles.burgerButton}

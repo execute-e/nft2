@@ -270,3 +270,12 @@ func (h *Handler) DeleteWinnerByID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Winner deleted successfully"})
 }
+
+func (h *Handler) ListPublicWinners(c *gin.Context) {
+	winners, err := h.raffleService.ListPublicWinners(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve public winners", "details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, winners)
+}

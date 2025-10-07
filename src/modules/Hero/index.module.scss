@@ -34,6 +34,10 @@
 		border-radius: 0;
 		background-position: 25%;
 	}
+
+	@include mobile-m {
+		background: url(./images/mobile.jpg) no-repeat center/cover;
+	}
 }
 
 .info {

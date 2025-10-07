@@ -3,90 +3,27 @@ import styles from './index.module.scss'
 import GradientText from '../GradientText/GradientText'
 
 type Winner = {
-	id: string | number
-	twitterUsername: string
-	walletAddress: string
+	twitter_id: string
+	discord_username: string
+	wallet_address: string
 }
 
-// --- Мок-функция для имитации запроса к серверу ---
-// ЗАМЕНИТЕ ЭТОТ КОД РЕАЛЬНЫМ ЗАПРОСОМ К ВАШЕМУ API
 const fetchWinners = async (): Promise<Winner[]> => {
-	console.log('Fetching data...')
-	await new Promise(resolve => setTimeout(resolve, 1000))
-	return [
-		{
-			id: 1,
-			twitterUsername: '@elonmusk',
-			walletAddress: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B',
-		},
-		{
-			id: 2,
-			twitterUsername: '@vitalikbuterin',
-			walletAddress: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
-		},
-		{
-			id: 3,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 4,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 5,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 6,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 7,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 8,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 9,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 10,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 11,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 12,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 13,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-		{
-			id: 14,
-			twitterUsername: '@jack',
-			walletAddress: '0x1c58438dA1EaD683f26A396B25921f7ad8243F28',
-		},
-	]
+	try {
+		const response = await fetch('http://localhost:8080/raffle/winners') // TODO: change URL
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => ({}))
+			throw new Error(errorData.error || 'Failed to fetch winners list')
+		}
+
+		const winnersData = await response.json()
+
+		return winnersData || []
+	} catch (error) {
+		console.error('Error fetching winners:', error)
+		return []
+	}
 }
-// ----------------------------------------------------
 
 const WinnersTable = () => {
 	const [winners, setWinners] = useState<Winner[]>([])
@@ -94,7 +31,6 @@ const WinnersTable = () => {
 	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
-		// Запрос отправляется один раз при монтировании компонента
 		fetchWinners()
 			.then(data => {
 				setWinners(data)
@@ -105,7 +41,7 @@ const WinnersTable = () => {
 			.finally(() => {
 				setIsLoading(false)
 			})
-	}, []) // Пустой массив зависимостей означает "выполнить один раз"
+	}, [])
 
 	if (isLoading) {
 		return <div className={styles.loading}>Request in progress...⏳</div>
@@ -141,28 +77,28 @@ const WinnersTable = () => {
 				<table className={styles.WinnersTable}>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Twitter</th>
+							<th>Discord</th>
 							<th>Wallet Address</th>
 						</tr>
 					</thead>
 					<tbody>
 						{winners.map(winner => (
-							<tr key={winner.id}>
-								<td>{winner.id}</td>
+							<tr key={winner.twitter_id}>
 								<td>
 									<a
-										href={`https://twitter.com/${winner.twitterUsername.replace(
+										href={`https://twitter.com/${winner.twitter_id.replace(
 											'@',
 											''
 										)}`}
 										target='_blank'
 										rel='noopener noreferrer'
 									>
-										{winner.twitterUsername}
+										{winner.twitter_id}
 									</a>
 								</td>
-								<td>{winner.walletAddress}</td>
+								<td>{winner.wallet_address}</td>
+								<td>{winner.discord_username}</td>
 							</tr>
 						))}
 					</tbody>

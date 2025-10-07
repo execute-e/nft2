@@ -5,6 +5,7 @@ import styles from './index.module.scss'
 import xIcon from './images/x.svg'
 import ModalWindow from '../ModalWindow/ModalWindow'
 import WinnersTable from '../WinnersTable/WinnersTable'
+import SuccessWindow from '../FinalResModal/SuccessPassModal'
 
 type TwitterUser = {
 	username: string
@@ -25,11 +26,13 @@ interface RaffleFormProps {
 export const RaffleForm = ({
 	imageUrl,
 	onSubmitSuccess,
-	initialTwitterUser, 
+	initialTwitterUser,
 }: RaffleFormProps) => {
 	const [twitterUser, setTwitterUser] = useState<TwitterUser | null>(
 		initialTwitterUser || null
 	)
+	const [submissionError, setSubmissionError] = useState<string | null>(null)
+	const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false)
 
 	const savedData = sessionStorage.getItem('raffleFormData')
 	const initialValues = savedData
@@ -61,15 +64,19 @@ export const RaffleForm = ({
 		return () => subscription.unsubscribe()
 	}, [watch])
 
+
 	const handleTwitterLogin = () => {
 		const returnPath = window.location.pathname
 		const loginUrl = `http://localhost:8080/auth/twitter/login?redirect_to=${encodeURIComponent(
+			// TODO: заменить на реальный URL
 			returnPath
 		)}`
 		window.location.href = loginUrl
 	}
 
 	const onSubmit: SubmitHandler<FormInputs> = async data => {
+		setSubmissionError(null)
+
 		if (!twitterUser) {
 			alert('Please connect your Twitter account first.')
 			return
@@ -89,12 +96,10 @@ export const RaffleForm = ({
 
 			if (!response.ok) {
 				const errorData = await response.json()
-				throw new Error(errorData.error || 'Server responded with an error')
+				throw new Error(errorData.error || 'An unknown error occurred')
 			}
 
 			const result = await response.json()
-			console.log('Submission successful:', result)
-			alert('Thank you for entering!')
 
 			if (onSubmitSuccess) {
 				onSubmitSuccess(result)
@@ -104,10 +109,11 @@ export const RaffleForm = ({
 			reset()
 			setTwitterUser(null)
 		} catch (error: any) {
-			console.error('Submission error:', error)
-			alert(error.message)
+			// console.error('Submission error:', error)
+			setSubmissionError(error.message)
 		}
 	}
+
 	return (
 		<div className={styles.raffleContainer}>
 			<div className={styles.formPanel}>
@@ -183,6 +189,9 @@ export const RaffleForm = ({
 						>
 							{isSubmitting ? 'Submitting...' : 'Enter Giveaway'}
 						</button>
+						{submissionError && (
+							<p className={styles.submissionError}>{submissionError}</p>
+						)}
 					</form>
 				</div>
 			</div>
@@ -223,6 +232,11 @@ export const RaffleForm = ({
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
 						<WinnersTable />
 					</ModalWindow>
+
+					<SuccessWindow
+						isOpen={isSuccessModalOpen}
+						onClose={() => setIsSuccessModalOpen(false)}
+					></SuccessWindow>
 				</div>
 			</div>
 		</div>

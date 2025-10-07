@@ -25,6 +25,7 @@ type WinnerRepo interface {
 	GetAll(ctx context.Context) ([]domain.User, error)
 	DeleteWinnerByID(ctx context.Context, id int64) error
 	FindByTwitterID(ctx context.Context, id string) (*domain.User, error)
+	FindAllPublic(ctx context.Context) ([]domain.PublicWinnerDTO, error)
 }
 
 type RaffleService struct {
@@ -59,8 +60,8 @@ func (w *RaffleService) RegisterUser(ctx context.Context, user *domain.User) err
 
 	err = w.userRepo.CreateUser(ctx, *user)
 	if err != nil {
-		logger.Error("failed to create new user", "error", err)
-		return fmt.Errorf("failed to create new user: %w", err)
+		logger.Error("failed to register user in svc", "error", err)
+		return domain.ErrUserAlreadyExists // TODO: доработка
 	}
 
 	logger.Info("user successfully registered", "twitter_id", user.TwitterID)
@@ -142,6 +143,11 @@ func (w *RaffleService) TruncateWinners(ctx context.Context) error {
 		return fmt.Errorf("failed to truncate winners: %w", err)
 	}
 	return nil
+}
+
+func (s *RaffleService) ListPublicWinners(ctx context.Context) ([]domain.PublicWinnerDTO, error) {
+	logger.Debug("listing public winners")
+	return s.winnerRepo.FindAllPublic(ctx)
 }
 
 func (w *RaffleService) ListAllWinners(ctx context.Context) ([]domain.User, error) {

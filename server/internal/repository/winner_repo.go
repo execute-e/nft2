@@ -22,6 +22,28 @@ func NewWinnerRepository(pool *pgxpool.Pool) *winnerRepository {
 	}
 }
 
+func (r *winnerRepository) FindAllPublic(ctx context.Context) ([]domain.PublicWinnerDTO, error) {
+	query := `SELECT twitter_id, wallet_address, discord_username FROM winners`
+
+	rows, err := r.pool.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var winners []domain.PublicWinnerDTO
+	for rows.Next() {
+		var w domain.PublicWinnerDTO
+		if err := rows.Scan(&w.TwitterID, &w.DiscordUsername ,&w.WalletAddress); err != nil {
+			return nil, err
+		}
+
+		winners = append(winners, w)
+	}
+	return winners, nil
+}
+
+
 func (w *winnerRepository) GetAll(ctx context.Context) ([]domain.User, error) {
 	logger.Debug("getting all winners")
 	query := "SELECT id, twitter_id, twitter_username, discord_username, wallet_address FROM winners"

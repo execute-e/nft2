@@ -15,7 +15,7 @@
 
 	// Убираем margin для модального окна
 	@media (max-width: 767px) {
-		border-radius: 0; 
+		border-radius: 0;
 		max-height: 100vh;
 		overflow-y: auto;
 	}
@@ -36,23 +36,21 @@
 }
 
 .infoPanel {
-  padding: 30px 20px;
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(100, 99, 99, 0.453)),
-    url('./images/modal-gb.jpeg') center/cover no-repeat; 
-  color: var(--color-white);
-  text-align: center;
-  order: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
+	padding: 30px 20px;
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(100, 99, 99, 0.453)),
+		url('./images/modal-gb.jpeg') center/cover no-repeat;
+	color: var(--color-white);
+	text-align: center;
+	order: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	width: 100%;
+	box-sizing: border-box;
+	position: relative;
 }
-
 
 // Контейнер для картинки
 .imageContainer {
@@ -262,6 +260,14 @@
 .checkmark {
 	font-size: 1.2em;
 	font-weight: bold;
+}
+
+.submissionError {
+	color: #e74c3c; // Красный цвет
+	text-align: center;
+	margin-top: 15px;	
+	font-weight: bold;
+	font-size: clamp(0.1rem, 2.5vw, 1.2rem);
 }
 
 /* --- Адаптивность для планшетов --- */

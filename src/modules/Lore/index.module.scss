@@ -46,6 +46,10 @@
 		margin-bottom: rem(20);
 		background: url('./images/lore-bg.jpg') no-repeat center/cover;
 	}
+
+	@include mobile-m {
+		background: url('./images/mobile-bg.jpg') no-repeat center/cover; 
+	}
 }
 
 .title {

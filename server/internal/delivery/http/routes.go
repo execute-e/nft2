@@ -25,7 +25,6 @@ func RegisterRoutes(router *gin.Engine, h *Handler, adminToken, sessionSecret st
 		if err != nil {
 			log.Fatal("failed to create subFS for admin panel:", err)
 		}
-		// Отдаем файлы из встроенной файловой системы
 		adminPanelGroup.StaticFS("/", http.FS(subFS))
 	}
 
@@ -39,6 +38,7 @@ func RegisterRoutes(router *gin.Engine, h *Handler, adminToken, sessionSecret st
 	raffleGroup := router.Group("/raffle")
 	{
 		raffleGroup.POST("/register", h.RegisterForRaffle) // POST /raffle/register
+		raffleGroup.GET("/winners", h.ListPublicWinners) // GET /raffle/winners
 	}
 
 	adminGroup := router.Group("/admin", AdminAuth(adminToken))
