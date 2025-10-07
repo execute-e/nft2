@@ -78,11 +78,11 @@ func (r *userRepository) CreateUser(ctx context.Context, entity domain.User) err
 	if err != nil {
 		var pgErr *pgx.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-				logger.Error("user already exists", "error", err)
+				logger.Error("user already exists in users table", "error", err)
 				return domain.ErrUserAlreadyExists
 		}
 		logger.Error("failed to create user", "error", err)
-		return fmt.Errorf("failed to create user: %w", err)
+		return fmt.Errorf("failed to create user in users table: %w", err)
 	}
 	logger.Info("user created successfully", "twitter_id", entity.TwitterID)
 	return nil

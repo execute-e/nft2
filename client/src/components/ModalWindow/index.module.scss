@@ -1,0 +1,60 @@
+@use '../../styles/helpers' as *;
+
+.modal {
+	overflow: auto;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE и Edge */
+
+	&::-webkit-scrollbar {
+		/* Chrome, Safari */
+		display: none;
+	}
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	translate: -50% -50%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: rem(17);
+	display: block;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s;
+	box-shadow: 0 0 0 100vmax #00000094;
+	z-index: 100;
+	min-width: 45%;
+
+	&[open] {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	&::backdrop {
+		background: #00000000;
+	}
+}
+
+// .inner {
+// 	display: flex;
+// 	flex-direction: column;
+// 	padding: rem(15) rem(40) rem(30);
+// 	border-radius: rem(12);
+// }
+
+.modalClose {
+	position: absolute;
+	top: rem(10);
+	right: rem(10);
+	color: var(--color-white);
+	cursor: pointer;
+	background: none;
+	font-size: 1.5rem;
+	border: none;
+	width: rem(40);
+	height: rem(40);
+
+	@include hover {
+		opacity: 0.7;
+	}
+}

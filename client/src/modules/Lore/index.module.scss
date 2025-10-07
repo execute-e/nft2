@@ -1,0 +1,87 @@
+@use '../../styles/helpers' as *;
+
+.lore {
+	margin-top: rem(160);
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	@include laptop {
+		margin-top: rem(120);
+	}
+
+	@include tablet {
+		margin-top: rem(100);
+	}
+
+	@include mobile-l {
+		margin-top: rem(80);
+	}
+}
+
+.loreBg {
+	width: 100%;
+	border-radius: 4%;
+
+	@include mobile-l {
+		display: none;
+	}
+}
+
+.bg {
+	margin-bottom: rem(36);
+
+	@include laptop {
+		margin-bottom: rem(32);
+	}
+
+	@include tablet {
+		margin-bottom: rem(28);
+	}
+
+	@include mobile-l {
+		width: 100%;
+		height: rem(500);
+		margin-bottom: rem(20);
+		background: url('./images/lore-bg.jpg') no-repeat center/cover;
+	}
+
+	@include mobile-m {
+		background: url('./images/mobile-bg.jpg') no-repeat center/cover; 
+	}
+}
+
+.title {
+	@include fluid-text(70, 45);
+	font-weight: 400;
+	color: var(--color-pink);
+	font-family: var(--font-family-accent);
+	letter-spacing: 0;
+	line-height: 1;
+	text-transform: uppercase;
+	margin-block: rem(16);
+
+	@include laptop {
+		margin-block: rem(12);
+	}
+}
+
+.subtitle {
+	font-size: 32px;
+	margin-top: rem(20);
+
+	@include tablet {
+		margin-top: rem(16);
+	}
+
+	@include mobile-l {
+		margin-top: rem(12);
+	}
+}
+
+.text {
+  max-width: rem(1100);
+  font-weight: 500;
+  margin-inline: auto;
+}

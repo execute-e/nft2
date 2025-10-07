@@ -42,6 +42,8 @@ func (uc *AuthService) ProcessCallback(ctx context.Context, code, verifier strin
 		return nil, fmt.Errorf("failed to get user profile: %w", err)
 	}
 
+
+	//TODO: rewrite check twitter account age
 	sixMonthsAgo := time.Now().AddDate(0, -6, 0)
 	if profile.Data.CreatedAt.After(sixMonthsAgo) {
 		return nil, ErrAccountTooNew

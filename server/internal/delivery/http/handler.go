@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 
@@ -81,7 +82,29 @@ func (h *Handler) TwitterCallback(c *gin.Context) {
 		return
 	}
 	c.SetCookie(sessionCookieName, string(sessionData), cookieMaxAgeSeconds, "/", "", false, true)
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	FrontendURL := os.Getenv("FRONTEND_URL")
+	c.Redirect(http.StatusTemporaryRedirect, FrontendURL)
+}
+
+func (h *Handler) AuthStatus(c *gin.Context) {
+	sessionCookie, err := c.Cookie(sessionCookieName)
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	if sessionCookie == "" {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	var sessionData usecase.TwitterAuthResult
+	if err := json.Unmarshal([]byte(sessionCookie), &sessionData); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "failed to parse session"})
+		return
+	}
+
+	c.JSON(http.StatusOK, sessionData)
 }
 
 func (h *Handler) RegisterForRaffle(c *gin.Context) {
@@ -246,4 +269,13 @@ func (h *Handler) DeleteWinnerByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Winner deleted successfully"})
+}
+
+func (h *Handler) ListPublicWinners(c *gin.Context) {
+	winners, err := h.raffleService.ListPublicWinners(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve public winners", "details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, winners)
 }

@@ -1,0 +1,345 @@
+@use '../../styles/helpers' as *;
+
+.raffleContainer {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	max-width: 100%;
+	min-height: auto;
+	background-color: var(--color-white);
+	border-radius: 16px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	position: relative;
+	overflow: hidden;
+	font-family: var(--font-family-base);
+
+	// Убираем margin для модального окна
+	@media (max-width: 767px) {
+		border-radius: 0;
+		max-height: 100vh;
+		overflow-y: auto;
+	}
+}
+
+/* --- Панели (Форма и Инфо) --- */
+.formPanel {
+	padding: 24px 20px;
+	color: var(--color-black);
+	order: 2;
+	width: 100%;
+	box-sizing: border-box;
+
+	form {
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
+.infoPanel {
+	padding: 30px 20px;
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(100, 99, 99, 0.453)),
+		url('./images/modal-gb.jpeg') center/cover no-repeat;
+	color: var(--color-white);
+	text-align: center;
+	order: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	width: 100%;
+	box-sizing: border-box;
+	position: relative;
+}
+
+// Контейнер для картинки
+.imageContainer {
+	width: 100%;
+	max-width: 300px;
+	margin: 0 auto;
+
+	@media (max-width: 767px) {
+		max-width: 200px;
+	}
+}
+
+.infoPanelImage {
+	width: 100%;
+	height: auto;
+	object-fit: contain;
+	border-radius: 12px;
+	filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+}
+
+.infoContent {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	width: 100%;
+	max-width: 400px;
+	font-weight: 600;
+
+	h3 {
+		font-family: var(--font-family-accent);
+		font-size: clamp(1.5rem, 4vw, 2.5rem);
+		font-weight: 400;
+		margin: 0;
+		line-height: 1.2;
+	}
+
+	p {
+		font-size: clamp(0.85rem, 2vw, 0.95rem);
+		line-height: 1.6;
+		max-width: 350px;
+		opacity: 0.9;
+		margin: 0;
+	}
+}
+
+/* --- Элементы формы --- */
+.formTitle {
+	font-family: var(--font-family-accent);
+	font-size: clamp(1.5rem, 5vw, 2.2rem);
+	font-weight: 400;
+	margin-bottom: 8px;
+	color: var(--color-black);
+	text-align: center;
+}
+
+.formSubtitle {
+	font-size: clamp(0.9rem, 2.5vw, 1rem);
+	margin-bottom: 24px;
+	color: var(--color-black-80);
+	text-align: center;
+}
+
+.inputGroup {
+	margin-bottom: 18px;
+	text-align: left;
+	width: 100%;
+
+	label {
+		display: block;
+		margin-bottom: 8px;
+		font-size: clamp(0.8rem, 2vw, 0.85rem);
+		font-weight: 600;
+		color: var(--color-black-80);
+	}
+
+	input {
+		background-color: var(--bgc);
+		border: 1px solid #e0e0e0;
+		padding: 12px 15px;
+		width: 100%;
+		box-sizing: border-box;
+		border-radius: 8px;
+		color: var(--color-black);
+		font-family: var(--font-family-base);
+		font-size: clamp(0.9rem, 2vw, 1rem);
+		transition: all var(--transition-duration);
+
+		&::placeholder {
+			color: #b0b0b0;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: var(--color-purple);
+			box-shadow: 0 0 0 3px rgba(153, 162, 255, 0.3);
+			background-color: var(--color-white);
+		}
+	}
+}
+
+.error {
+	color: #d93025;
+	font-size: clamp(0.75rem, 2vw, 0.8rem);
+	font-weight: 500;
+	margin-top: 6px;
+}
+
+/* --- Кнопки --- */
+.submitButton,
+.twitterButton,
+.discordLinkButton {
+	width: 100%;
+	border-radius: 8px;
+	border: none;
+	font-size: clamp(0.9rem, 2.5vw, 1rem);
+	font-weight: 600;
+	padding: 14px 20px;
+	cursor: pointer;
+	transition: all var(--transition-duration);
+	font-family: var(--font-family-base);
+	text-decoration: none;
+	text-align: center;
+	display: inline-block;
+	box-sizing: border-box;
+
+	@media (max-width: 767px) {
+		min-height: 48px;
+		padding: 12px 20px;
+	}
+}
+
+.submitButton {
+	background: var(--color-pink);
+	color: var(--color-white);
+	margin-top: 8px;
+
+	&:hover:not(:disabled) {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 20px rgba(153, 162, 255, 0.4);
+	}
+
+	&:active:not(:disabled) {
+		transform: translateY(0);
+	}
+
+	&:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+}
+
+.twitterButton {
+	background-color: #1da1f2;
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+
+	img {
+		width: 24px;
+		height: 24px;
+		filter: invert(1);
+	}
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 20px rgba(29, 161, 242, 0.3);
+	}
+
+	&:active {
+		transform: translateY(0);
+	}
+}
+
+.discordLinkButton {
+	border: 2px solid var(--color-white);
+	background-color: transparent;
+	color: var(--color-white);
+	padding: 12px 20px;
+	width: 100%;
+	max-width: 250px;
+	box-sizing: border-box;
+
+	&:hover {
+		background-color: var(--color-white);
+		color: var(--color-purple);
+	}
+}
+
+.twitterSuccess {
+	background-color: #eaf5fd;
+	border: 1px solid #1da1f2;
+	color: #0c85d0;
+	padding: 12px 15px;
+	border-radius: 8px;
+	text-align: center;
+	font-weight: 500;
+	font-size: clamp(0.85rem, 2vw, 0.9rem);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.checkmark {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.submissionError {
+	color: #e74c3c; // Красный цвет
+	text-align: center;
+	margin-top: 15px;	
+	font-weight: bold;
+	font-size: clamp(0.1rem, 2.5vw, 1.2rem);
+}
+
+/* --- Адаптивность для планшетов --- */
+@media (min-width: 768px) and (max-width: 991px) {
+	.raffleContainer {
+		max-width: 700px;
+		margin: 0 auto;
+	}
+
+	.formPanel {
+		padding: 40px 40px;
+	}
+
+	.infoPanel {
+		padding: 40px 40px;
+	}
+
+	.imageContainer {
+		max-width: 250px;
+	}
+}
+
+/* --- Адаптивность для десктопов --- */
+@media (min-width: 992px) {
+	.raffleContainer {
+		flex-direction: row;
+		max-width: 1000px;
+		margin: 0 auto;
+		min-height: 600px;
+	}
+
+	.formPanel {
+		flex: 1.2;
+		padding: 50px 60px;
+		order: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.infoPanel {
+		flex: 1;
+		order: 2;
+		padding: 50px 40px;
+		gap: 30px;
+	}
+
+	.imageContainer {
+		max-width: 350px;
+	}
+
+	.formTitle,
+	.formSubtitle {
+		text-align: left;
+	}
+
+	.inputGroup {
+		margin-bottom: 22px;
+	}
+}
+
+/* --- Адаптивность для больших экранов --- */
+@media (min-width: 1200px) {
+	.raffleContainer {
+		max-width: 1100px;
+	}
+
+	.formPanel {
+		padding: 60px 70px;
+	}
+
+	.imageContainer {
+		max-width: 400px;
+	}
+}

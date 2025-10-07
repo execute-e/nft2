@@ -16,3 +16,9 @@ type RegistrationForm struct {
 	DiscordUsername string `json:"discord_username" binding:"required"`
 	WalletAddress   string `json:"wallet_address" binding:"required,eth_addr"` 
 }
+
+type PublicWinnerDTO struct {
+	TwitterID      string `json:"twitter_id"`
+	DiscordUsername string `json:"discord_username"`
+	WalletAddress  string `json:"wallet_address"`
+}

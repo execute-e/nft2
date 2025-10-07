@@ -1,0 +1,214 @@
+@use '../../styles/helpers' as *;
+
+.header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 50;
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+
+	@include mobile-l {
+		padding-inline: 0;
+		background-color: var(--bgc);
+	}
+}
+
+.logo {
+	width: rem(42);
+	height: rem(42);
+	background-color: var(--bgc);
+	padding: rem(10);
+	border-radius: 0 0 50%;
+	box-sizing: content-box;
+}
+
+.nav {
+	background-color: var(--bgc);
+	border-radius: 0 0 rem(25) rem(25);
+	padding: rem(10) rem(20);
+	align-self: stretch;
+	position: absolute;
+	top: 0;
+	height: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	text-align: center;
+
+	@include tablet {
+		display: none;
+	}
+}
+
+.list {
+	display: flex;
+	align-items: center;
+	column-gap: rem(24);
+	height: 100%;
+
+	&Item {
+		display: flex;
+		align-items: center;
+		height: 100%;
+	}
+}
+
+.link {
+	font-size: rem(16);
+	font-weight: 500;
+}
+
+.button {
+	font-family: var(--font-family-accent);
+	font-weight: 500;
+	color: var(--color-white);
+	background-color: var(--color-pink);
+	padding: rem(8) rem(20);
+	border-radius: rem(24);
+	border: none;
+	font-size: rem(16);
+
+	@include hover {
+		background-color: #f8a0c5;
+		color: #ee6d83;
+	}
+
+	@include mobile-l {
+		display: none;
+	}
+
+	&Overlay {
+		background-color: var(--bgc);
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 rem(10);
+		border-radius: 0 0 0 rem(24);
+		column-gap: rem(12);
+	}
+}
+
+.burgerButton {
+	height: rem(36);
+	width: rem(36);
+	border-radius: 50%;
+	border: var(--color-pink) rem(2) solid;
+	padding: rem(8);
+	background: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	row-gap: rem(4);
+
+	@include tablet-above {
+		display: none;
+	}
+
+	@include hover {
+		opacity: 0.7;
+	}
+
+	&Line {
+		height: rem(2);
+		width: rem(20);
+		background-color: var(--color-pink);
+	}
+}
+
+// for Modal Window zhi est'
+.form {
+	display: flex;
+	flex-direction: column;
+	row-gap: rem(20);
+
+
+	&Title {
+		@include fluid-text(24, 16);
+		font-weight: 500;
+		color: var(--color-white);
+	}
+
+	&List {
+		display: flex;
+		flex-direction: column;
+		row-gap: rem(20);
+	}
+
+	&Item {
+		display: flex;
+		flex-direction: column;
+		font-size: rem(20);
+	}
+
+	&Button {
+		padding: rem(5);
+		background-color: var(--color-white);
+		border: rem(2) solid var(--color-black);
+		box-shadow: 4px 4px var(--color-black);
+
+		@include hover {
+			background-color: var(--color-pink);
+			color: var(--color-white);
+		}
+	}
+
+	&Error {
+		font-weight: 500;
+		color: red;
+	}
+}
+
+.fieldset {
+	display: flex;
+	flex-direction: column;
+}
+
+.twitter {
+	width: 100%;
+	height: rem(40);
+	background-color: var(--color-white);
+	padding: rem(5);
+	display: flex;
+	align-items: center;
+	color: var(--color-black);
+	position: relative;
+	z-index: 150;
+	border: rem(2) solid var(--color-black);
+	box-shadow: 4px 4px var(--color-black);
+
+	&::before {
+		content: '';
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 0;
+		background-color: var(--color-pink);
+		transition: width 0.3s;
+		z-index: -1;
+	}
+
+	@include hover {
+		color: var(--color-white);
+
+		&::before {
+			width: 100%;
+		}
+	}
+}
+
+.discord,
+.wallet {
+	height: rem(40);
+	background-color: var(--color-white);
+	border: rem(2) solid var(--color-black);
+	padding: rem(5);
+	display: flex;
+	align-items: center;
+	color: var(--color-black);
+	box-shadow: 4px 4px var(--color-black);
+}
