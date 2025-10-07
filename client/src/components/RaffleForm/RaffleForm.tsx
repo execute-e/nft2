@@ -64,13 +64,11 @@ export const RaffleForm = ({
 		return () => subscription.unsubscribe()
 	}, [watch])
 
-
 	const handleTwitterLogin = () => {
 		const returnPath = window.location.pathname
-		const loginUrl = `http://localhost:8080/auth/twitter/login?redirect_to=${encodeURIComponent(
-			// TODO: заменить на реальный URL
-			returnPath
-		)}`
+		const loginUrl = `${
+			import.meta.env.VITE_API_BASE_URL
+		}/auth/twitter/login?redirect_to=${encodeURIComponent(returnPath)}`
 		window.location.href = loginUrl
 	}
 
@@ -83,16 +81,18 @@ export const RaffleForm = ({
 		}
 
 		try {
-			const response = await fetch('http://localhost:8080/raffle/register', {
-				// TODO: заменить на реальный URL
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				credentials: 'include',
-				body: JSON.stringify({
-					discord_username: data.discordUsername,
-					wallet_address: data.walletAddress,
-				}),
-			})
+			const response = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/raffle/register`,
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					credentials: 'include',
+					body: JSON.stringify({
+						discord_username: data.discordUsername,
+						wallet_address: data.walletAddress,
+					}),
+				}
+			)
 
 			if (!response.ok) {
 				const errorData = await response.json()

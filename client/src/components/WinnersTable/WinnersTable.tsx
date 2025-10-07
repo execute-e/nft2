@@ -10,7 +10,9 @@ type Winner = {
 
 const fetchWinners = async (): Promise<Winner[]> => {
 	try {
-		const response = await fetch('http://localhost:8080/raffle/winners') // TODO: change URL
+		const response = await fetch(
+			`${import.meta.env.VITE_API_BASE_URL}/raffle/winners`
+		) 
 		if (!response.ok) {
 			const errorData = await response.json().catch(() => ({}))
 			throw new Error(errorData.error || 'Failed to fetch winners list')

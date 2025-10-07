@@ -25,7 +25,7 @@ const Header: React.FC = () => {
 		const checkAuthAndOpenModal = async () => {
 			try {
 				const response = await fetch(
-					'http://localhost:8080/auth/twitter/status',
+					'${import.meta.env.VITE_API_BASE_URL}/auth/twitter/status',
 					{
 						credentials: 'include',
 					}

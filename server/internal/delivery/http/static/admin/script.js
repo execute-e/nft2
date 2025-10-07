@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-	const API_BASE_URL = 'http://localhost:8080/admin'
+	const API_BASE_URL = '${import.meta.env.VITE_API_BASE_URL}/admin'
 	const tokenInput = document.getElementById('admin-token')
 	const saveTokenBtn = document.getElementById('save-token')
 	const statusMessage = document.getElementById('status-message')
