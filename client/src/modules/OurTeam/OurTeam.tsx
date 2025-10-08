@@ -34,7 +34,7 @@ const OurTeam: React.FC = () => {
 								<img className={styles.photo} src={first} />
 								<div className={styles.memberInfo}>
 									<h3 className={styles.name}>CABURUS</h3>
-									<p className={styles.role}>Founder / Artist</p>
+									<p className={styles.role}>Founder / CEO</p>
 								</div>
 							</AnimatedContent>
 						</FadeContent>
