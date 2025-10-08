@@ -89,6 +89,8 @@ func (h *Handler) TwitterCallback(c *gin.Context) {
 
 
 	frontendURLStr := os.Getenv("FRONTEND_URL")
+
+	log.Printf("DEBUG: FRONTEND_URL from env: '%s'", frontendURLStr)
 	if frontendURLStr == "" {
 		log.Println("ERROR: FRONTEND_URL environment variable is not set")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "server configuration error"})
