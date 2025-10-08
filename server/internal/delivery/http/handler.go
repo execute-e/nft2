@@ -119,6 +119,14 @@ func (h *Handler) TwitterCallback(c *gin.Context) {
 		isSecure = false 
 	}
 
+	log.Printf(
+    "DEBUG: Setting cookie with -> Name: %s, Domain: %s, Secure: %t",
+    sessionCookieName,
+    cookieDomain,
+    isSecure,
+)
+
+
 	c.SetCookie(
 		sessionCookieName,   
 		string(sessionData), 
