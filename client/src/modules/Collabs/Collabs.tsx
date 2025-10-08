@@ -117,6 +117,87 @@ const Collabs: React.FC = () => {
 							/>
 						</a>
 					</li>
+
+					<li className={styles.collab}>
+						<a
+							href='https://x.com/LaMouchNFT'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
+							<img
+								src={Images.twelve}
+								alt=''
+								className={styles.image}
+								loading='lazy'
+								decoding='async'
+							/>
+						</a>
+					</li>
+
+					<li className={styles.collab}>
+						<a
+							href='https://x.com/Bober_xyz'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
+							<img
+								src={Images.thirteen}
+								alt=''
+								className={styles.image}
+								loading='lazy'
+								decoding='async'
+							/>
+						</a>
+					</li>
+
+					<li className={styles.collab}>
+						<a
+							href='https://x.com/Monadoons'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
+							<img
+								src={Images.fourteen}
+								alt=''
+								className={styles.image}
+								loading='lazy'
+								decoding='async'
+							/>
+						</a>
+					</li>
+
+					<li className={styles.collab}>
+						<a
+							href='https://x.com/canz_xyz'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
+							<img
+								src={Images.fifteen}
+								alt=''
+								className={styles.image}
+								loading='lazy'
+								decoding='async'
+							/>
+						</a>
+					</li>
+
+					<li className={styles.collab}>
+						<a
+							href='https://x.com/csfmly'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
+							<img
+								src={Images.sixteen}
+								alt=''
+								className={styles.image}
+								loading='lazy'
+								decoding='async'
+							/>
+						</a>
+					</li>
+
 					<li className={styles.collab}>
 						<a
 							href='https://x.com/sealuminati'
@@ -357,6 +438,7 @@ const Collabs: React.FC = () => {
 							/>
 						</a>
 					</li>
+
 					<li className={styles.collab}>
 						<a
 							href='https://x.com/monadverse'
