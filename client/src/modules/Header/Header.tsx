@@ -235,7 +235,7 @@ const Header: React.FC = () => {
 				<div className={styles.buttonOverlay}>
 					<Magnet padding={50} disabled={false} magnetStrength={15}>
 						<button onClick={() => setIsOpen(true)} className={styles.button}>
-							Check eligable
+							Enter raffle!
 						</button>
 					</Magnet>
 
