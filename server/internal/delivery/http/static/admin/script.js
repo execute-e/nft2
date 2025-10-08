@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-	const API_BASE_URL = `https://the-monicorns-production.up.railway.app/admin` // TODO: заменить на свой урл
+	const API_BASE_URL = `https://the-monicorns-production.up.railway.app/admin` // TODO: заменить на свой URL
 	const tokenInput = document.getElementById('admin-token')
 	const saveTokenBtn = document.getElementById('save-token')
 	const statusMessage = document.getElementById('status-message')
