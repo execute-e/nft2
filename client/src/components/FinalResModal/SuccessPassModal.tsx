@@ -15,7 +15,7 @@ type ModalProps = {
 
 const SuccessWindow = ({ isOpen, onClose }: ModalProps) => {
 	const handleShare = () => {
-		const url = 'https://the-monicorns.xyz'
+		const url = 'https://www.monicorns.xyz'
 		const artURL = ''
 		const text = `Gmoni
 

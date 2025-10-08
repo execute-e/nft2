@@ -96,7 +96,7 @@ func (r *userRepository) FindRandomEligibleUsers(ctx context.Context, limit int)
 		WHERE twitter_id NOT IN (
 		    SELECT twitter_id FROM winners
 		)
-		ORDER BY RANDOM()
+		ORDER BY gen_random_uuid()
 		LIMIT $1
 	`
 	
