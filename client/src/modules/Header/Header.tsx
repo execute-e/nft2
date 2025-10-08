@@ -41,7 +41,7 @@ const Header: React.FC = () => {
 					setIsOpen(true)
 				}
 			} catch (error) {
-				// console.error('User not logged in on initial load:', error)
+				console.error('User not logged in on initial load:', error)
 			}
 		}
 
