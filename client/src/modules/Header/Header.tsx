@@ -25,7 +25,7 @@ const Header: React.FC = () => {
 		const checkAuthAndOpenModal = async () => {
 			try {
 				const response = await fetch(
-					'${import.meta.env.VITE_API_BASE_URL}/auth/twitter/status',
+					`${import.meta.env.VITE_API_BASE_URL}/auth/twitter/status`,
 					{
 						credentials: 'include',
 					}
@@ -48,8 +48,8 @@ const Header: React.FC = () => {
 		checkAuthAndOpenModal()
 	}, [])
 
-	const handleRaffleSuccess = (result: any) => {
-		console.log(`Result: ${result}`)
+	const handleRaffleSuccess = () => {
+		// console.log(`Result: ${result}`)
 		setIsOpen(false)
 		setIsOpenS(true)
 	}
