@@ -12,7 +12,7 @@ const fetchWinners = async (): Promise<Winner[]> => {
 	try {
 		const response = await fetch(
 			`${import.meta.env.VITE_API_BASE_URL}/raffle/winners`
-		) 
+		)
 		if (!response.ok) {
 			const errorData = await response.json().catch(() => ({}))
 			throw new Error(errorData.error || 'Failed to fetch winners list')
@@ -54,7 +54,11 @@ const WinnersTable = () => {
 	}
 
 	if (winners.length === 0) {
-		return <div className={styles.empty}>GA Winners table is empty</div>
+		return (
+			<div className={styles.empty}>
+				The results in the GA winners table have not been released yet.
+			</div>
+		)
 	}
 
 	return (
