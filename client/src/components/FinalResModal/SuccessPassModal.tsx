@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import styles from './index.module.scss'
-import passImage from './images/square_final.png'
+import passImage from './images/square_final.jpg'
 import xIcon from './images/x.svg'
 import AnimatedContent from '../AnimatedContent/AnimatedContent'
 import Magnet from '../Magnet/Magnet'
