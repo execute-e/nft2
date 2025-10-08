@@ -3,10 +3,13 @@ package http
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -51,11 +54,13 @@ func (h *Handler) TwitterCallback(c *gin.Context) {
 	cookieState, err := c.Cookie(stateCookieName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "state cookie not found"})
+		return
 	}
 
 	verifier, err := c.Cookie(verifierCookieName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "verifier cookie not found"})
+		return 
 	}
 
 	c.SetCookie(stateCookieName, "", -1, "/", "", false, true)
@@ -81,9 +86,49 @@ func (h *Handler) TwitterCallback(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to marshal session data", "details": err.Error()})
 		return
 	}
-	c.SetCookie(sessionCookieName, string(sessionData), cookieMaxAgeSeconds, "/", "", false, true)
-	FrontendURL := os.Getenv("FRONTEND_URL")
-	c.Redirect(http.StatusTemporaryRedirect, FrontendURL)
+
+
+	frontendURLStr := os.Getenv("FRONTEND_URL")
+	if frontendURLStr == "" {
+		log.Println("ERROR: FRONTEND_URL environment variable is not set")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "server configuration error"})
+		return
+	}
+
+	parsedURL, err := url.Parse(frontendURLStr)
+	if err != nil {
+		log.Printf("ERROR: Invalid FRONTEND_URL: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "server configuration error"})
+		return
+	}
+
+	cookieDomain := parsedURL.Hostname()
+	isSecure := true
+
+	// Для production-доменов (не localhost) мы хотим, чтобы cookie был доступен
+	// для всех поддоменов. Например, для 'www.monicorns.xyz' домен cookie
+	// должен быть '.monicorns.xyz'.
+	if cookieDomain != "localhost" {
+		if strings.HasPrefix(cookieDomain, "www.") {
+			cookieDomain = strings.TrimPrefix(cookieDomain, "www.")
+		}
+		cookieDomain = "." + cookieDomain // -> .monicorns.xyz
+	} else {
+		isSecure = false 
+	}
+
+	c.SetCookie(
+		sessionCookieName,   
+		string(sessionData), 
+		cookieMaxAgeSeconds,
+		"/",                 
+		cookieDomain,        
+		isSecure,            
+		true,               
+	)
+
+
+	c.Redirect(http.StatusTemporaryRedirect, frontendURLStr)
 }
 
 func (h *Handler) AuthStatus(c *gin.Context) {
