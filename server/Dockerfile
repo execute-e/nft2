@@ -18,11 +18,16 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build \
     ./cmd/app/main.go
 
 # Этап 2: Финальный образ
+# Этап 2: Финальный образ
 FROM alpine:latest
 
 WORKDIR /app
 
+# Копируем скомпилированный Go-бинарник
 COPY --from=builder /app/main .
+
+# Копируем статику админки. Путь указан относительно контекста сборки (папки server).
+COPY internal/delivery/http/static/admin ./static/admin
 
 # Хорошая практика — убедиться, что файл исполняемый
 RUN chmod +x ./main
