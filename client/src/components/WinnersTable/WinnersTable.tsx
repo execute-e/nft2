@@ -22,7 +22,7 @@ const fetchWinners = async (): Promise<Winner[]> => {
 
 		return winnersData || []
 	} catch (error) {
-		console.error('Error fetching winners:', error)
+		// console.error('Error fetching winners:', error)
 		return []
 	}
 }

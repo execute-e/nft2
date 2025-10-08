@@ -23,7 +23,7 @@ func NewWinnerRepository(pool *pgxpool.Pool) *winnerRepository {
 }
 
 func (r *winnerRepository) FindAllPublic(ctx context.Context) ([]domain.PublicWinnerDTO, error) {
-	query := `SELECT twitter_id, wallet_address, discord_username FROM winners`
+	query := `SELECT twitter_username, wallet_address, discord_username FROM winners`
 
 	rows, err := r.pool.Query(ctx, query)
 	if err != nil {
