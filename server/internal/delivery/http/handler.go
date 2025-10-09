@@ -41,8 +41,41 @@ func NewHandler(authService *usecase.AuthService, raffleService *usecase.RaffleS
 func (h *Handler) TwitterLogin(c *gin.Context) {
 	authURL, state, verifier := h.authService.GenerateAuthURL()
 
-	c.SetCookie(stateCookieName, state, cookieMaxAgeSeconds, "/", "", false, true)
-	c.SetCookie(verifierCookieName, verifier, cookieMaxAgeSeconds, "/", "", false, true)
+	frontendURL, _ := url.Parse(os.Getenv("FRONTEND_URL"))
+    cookieDomain := frontendURL.Hostname()
+    isSecure := true
+
+    if cookieDomain != "localhost" {
+        if strings.HasPrefix(cookieDomain, "www.") {
+            cookieDomain = strings.TrimPrefix(cookieDomain, "www.")
+        }
+        cookieDomain = "." + cookieDomain
+    } else {
+        isSecure = false
+    }
+
+    http.SetCookie(c.Writer, &http.Cookie{
+        Name:     stateCookieName,
+        Value:    state,
+        MaxAge:   3600, // 1 час
+        Path:     "/",
+        Domain:   cookieDomain,
+        Secure:   isSecure,
+        HttpOnly: true,
+        SameSite: http.SameSiteNoneMode, 
+    })
+
+    http.SetCookie(c.Writer, &http.Cookie{
+        Name:     verifierCookieName,
+        Value:    verifier,
+        MaxAge:   3600, // 1 час
+        Path:     "/",
+        Domain:   cookieDomain,
+        Secure:   isSecure,
+        HttpOnly: true,
+        SameSite: http.SameSiteNoneMode, 
+    })
+
 
 	c.Redirect(http.StatusTemporaryRedirect, authURL)
 }
