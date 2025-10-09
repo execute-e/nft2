@@ -17,18 +17,19 @@ const SuccessWindow = ({ isOpen, onClose }: ModalProps) => {
 	const handleShare = () => {
 		const url = 'https://www.monicorns.xyz/'
 		const artURL = 'https://tenor.com/mLMbxxQY9eS.gif'
+
 		const text = `Gmoni
 
 I just took part in the raffle @the_monicorns on the whitelist 
 
 Participate too ${url}
 
-Monicorns are everywhere\n
-${artURL}`
+Monicorns are everywhere`
 
+		// 2. Кодируем текст и URL отдельно и добавляем оба параметра в ссылку
 		const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
 			text
-		)}`
+		)}&url=${encodeURIComponent(artURL)}`
 
 		window.open(twitterIntentUrl, '_blank')
 	}
