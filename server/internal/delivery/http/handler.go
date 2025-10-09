@@ -253,7 +253,7 @@ func (h *Handler) RegisterForRaffle(c *gin.Context) {
 			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		} else if errors.Is(err, domain.ErrUserAlreadyWon) {
-			c.JSON(http.StatusConflict, gin.H{"error": "user already won the raffle" + err.Error()})
+			c.JSON(http.StatusConflict, gin.H{"error": "you have already won the raffle", "details": err.Error()})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to register user", "details": err.Error()})
