@@ -15,8 +15,8 @@ type ModalProps = {
 
 const SuccessWindow = ({ isOpen, onClose }: ModalProps) => {
 	const handleShare = () => {
-		const url = 'https://alert-hope-production.up.railway.app/'
-		const artURL = ''
+		const url = 'https://www.monicorns.xyz/'
+		const artURL = 'https://tenor.com/mLMbxxQY9eS.gif'
 		const text = `Gmoni
 
 I just took part in the raffle @the_monicorns on the whitelist 
