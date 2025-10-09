@@ -15,8 +15,6 @@ type ModalProps = {
 
 const SuccessWindow = ({ isOpen, onClose }: ModalProps) => {
 	const handleShare = () => {
-		const artURL = 'https://tenor.com/mLMbxxQY9eS.gif'
-
 		const text = `Gmoni
 
 I just took part in the raffle @the_monicorns on the whitelist 
@@ -27,7 +25,7 @@ Monicorns are everywhere`
 
 		const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
 			text
-		)}&url=${encodeURIComponent(artURL)}`
+		)}`
 
 		window.open(twitterIntentUrl, '_blank')
 	}

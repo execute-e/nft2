@@ -55,7 +55,8 @@ func (w *RaffleService) RegisterUser(ctx context.Context, user *domain.User) err
 
 	if err == nil {
 		logger.Info("user already exists in winners table", "twitter_id", user.TwitterID)
-		return fmt.Errorf("user with Twitter ID %s has already won", user.TwitterID)
+		return domain.ErrUserAlreadyWon
+		//  fmt.Errorf("user with Twitter ID %s has already won", user.TwitterID)
 	}
 
 	err = w.userRepo.CreateUser(ctx, *user)
