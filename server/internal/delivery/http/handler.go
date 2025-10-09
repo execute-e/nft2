@@ -77,7 +77,9 @@ func (h *Handler) TwitterLogin(c *gin.Context) {
     })
 
 
-	c.Redirect(http.StatusTemporaryRedirect, authURL)
+	c.JSON(http.StatusOK, gin.H{
+        "authorization_url": authURL,
+    })
 }
 
 func (h *Handler) TwitterCallback(c *gin.Context) {

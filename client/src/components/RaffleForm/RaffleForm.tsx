@@ -64,12 +64,30 @@ export const RaffleForm = ({
 		return () => subscription.unsubscribe()
 	}, [watch])
 
-	const handleTwitterLogin = () => {
-		const returnPath = window.location.pathname
-		const loginUrl = `${
-			import.meta.env.VITE_API_BASE_URL
-		}/auth/twitter/login?redirect_to=${encodeURIComponent(returnPath)}`
-		window.location.href = loginUrl
+	const handleTwitterLogin = async () => {
+		try {
+			// 1. Делаем fetch-запрос на наш бэкенд
+			const response =  await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/auth/twitter/login`,
+				{
+					method: 'GET',
+					credentials: 'include', 
+				}
+			)
+
+			if (!response.ok) {
+				throw new Error('Failed to get auth URL')
+			}
+
+			const data = await response.json()
+			const authUrl = data.authorization_url
+
+			if (authUrl) {
+				window.location.href = authUrl
+			}
+		} catch (error) {
+			console.error('Login failed:', error)
+		}
 	}
 
 	const onSubmit: SubmitHandler<FormInputs> = async data => {
