@@ -1,5 +1,5 @@
 import styles from './index.module.scss'
-import loreBg from './images/lore-bg.jpg'
+import loreBg from './images/lore-bg.webp'
 import vector1 from './images/vector1.svg'
 import vector2 from './images/vector2.svg'
 import GradientText from '../../components/GradientText/GradientText'

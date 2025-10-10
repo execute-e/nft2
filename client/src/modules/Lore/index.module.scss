@@ -44,11 +44,11 @@
 		width: 100%;
 		height: rem(500);
 		margin-bottom: rem(20);
-		background: url('./images/lore-bg.jpg') no-repeat center/cover;
+		background: url('./images/lore-bg.webp') no-repeat center/cover;
 	}
 
 	@include mobile-m {
-		background: url('./images/mobile-bg.jpg') no-repeat center/cover; 
+		background: url('./images/mobile-bg.webp') no-repeat center/cover;
 	}
 }
 
@@ -81,7 +81,7 @@
 }
 
 .text {
-  max-width: rem(1100);
-  font-weight: 500;
-  margin-inline: auto;
+	max-width: rem(1100);
+	font-weight: 500;
+	margin-inline: auto;
 }

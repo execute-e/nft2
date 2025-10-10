@@ -16,7 +16,7 @@
 	height: rem(920);
 	display: flex;
 	height: rem(920);
-	background: url(./images/hero.jpg) no-repeat center/cover;
+	background: url(./images/hero.webp) no-repeat center/cover;
 	border-radius: rem(20);
 	margin-bottom: rem(36);
 	margin-inline: auto;
@@ -36,7 +36,7 @@
 	}
 
 	@include mobile-m {
-		background: url(./images/mobile.jpg) no-repeat center/cover;
+		background: url(./images/mobile.webp) no-repeat center/cover;
 	}
 }
 
