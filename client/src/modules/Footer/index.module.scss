@@ -25,7 +25,7 @@
 	width: 100%;
     	height: rem(720);
 	aspect-ratio: 1920 / 720;
-	background: url('./images/bg.jpg') no-repeat center/cover;
+	background: url('./images/bg.webp') no-repeat center/cover;
 	border-radius: rem(30);
 	@include laptop {
 		height: rem(480);
@@ -68,7 +68,7 @@
 	translate: -50%;
 	width: rem(1200);
 	height: rem(250);
-	background: url('./images/skate.png') no-repeat center/contain;
+	background: url('./images/skate.webp') no-repeat center/contain;
 	@include laptop {
 		width: rem(740);
 		height: rem(154);

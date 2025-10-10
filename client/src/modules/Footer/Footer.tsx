@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './index.module.scss'
 import logo from './images/logo.svg'
-import first from './images/1.png'
-import second from './images/2.png'
-import third from './images/3.png'
+import first from './images/1.webp'
+import second from './images/2.webp'
+import third from './images/3.webp'
 import FadeContent from '@/components/FadeContent/FadeContent'
 
 const Footer: React.FC = () => {
