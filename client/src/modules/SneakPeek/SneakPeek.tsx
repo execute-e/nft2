@@ -1,13 +1,13 @@
 import React from 'react'
 import styles from './index.module.scss'
-import firstImg from './images/first_compressed.webp'
-import secondImg from './images/second_compressed.webp'
-import thirdImg from './images/third_compressed.webp'
-import fourthImg from './images/fourth_compressed.webp'
-import fifthImg from './images/fifth_compressed.webp'
-import sixthImg from './images/sixth_compressed.webp'
-import seventhImg from './images/seventh_compressed.webp'
-import eighthImg from './images/eighth_compressed.webp'
+import firstImg from './images/first.webp'
+import secondImg from './images/second.webp'
+import thirdImg from './images/third.webp'
+import fourthImg from './images/fourth.webp'
+import fifthImg from './images/fifth.webp'
+import sixthImg from './images/sixth.webp'
+import seventhImg from './images/seventh.webp'
+import eighthImg from './images/eighth.webp'
 
 const SneakPeek: React.FC = () => {
 	return (
