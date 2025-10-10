@@ -2,7 +2,6 @@ package http
 
 import (
 	"crypto/subtle"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -42,7 +41,7 @@ func BasicAuth() gin.HandlerFunc {
 		expectedUser := os.Getenv("BASIC_AUTH_USERNAME")
 		expectedPass := os.Getenv("BASIC_AUTH_PASSWORD")
 
-		log.Printf("Auth check: expectedUser='%s', expectedPass='%s'", expectedUser, expectedPass)
+		// log.Printf("Auth check: expectedUser='%s', expectedPass='%s'", expectedUser, expectedPass)
 
 		// чтобы избежать timing attacks
 		userMatch := (subtle.ConstantTimeCompare([]byte(user), []byte(expectedUser)) == 1)
