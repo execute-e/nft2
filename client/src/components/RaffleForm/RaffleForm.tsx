@@ -4,8 +4,10 @@ import type { SubmitHandler } from 'react-hook-form'
 import styles from './index.module.scss'
 import xIcon from './images/x.svg'
 import ModalWindow from '../ModalWindow/ModalWindow'
-import WinnersTable from '../WinnersTable/WinnersTable'
+import { lazy, Suspense } from 'react'
 import SuccessWindow from '../FinalResModal/SuccessPassModal'
+
+const WinnersTable = lazy(() => import('../WinnersTable/WinnersTable'))
 
 type TwitterUser = {
 	username: string
@@ -67,11 +69,11 @@ export const RaffleForm = ({
 	const handleTwitterLogin = async () => {
 		try {
 			// 1. Делаем fetch-запрос на наш бэкенд
-			const response =  await fetch(
+			const response = await fetch(
 				`${import.meta.env.VITE_API_BASE_URL}/auth/twitter/login`,
 				{
 					method: 'GET',
-					credentials: 'include', 
+					credentials: 'include',
 				}
 			)
 
@@ -248,7 +250,9 @@ export const RaffleForm = ({
 						Open Winners Table
 					</a>
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
-						<WinnersTable />
+						<Suspense fallback={<div>Загрузка...</div>}>
+							<WinnersTable />
+						</Suspense>
 					</ModalWindow>
 
 					<SuccessWindow

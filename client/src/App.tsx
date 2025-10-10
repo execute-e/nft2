@@ -14,14 +14,6 @@ import Footer from './modules/Footer/Footer'
 const App: React.FC = () => {
 	const [active, setActive] = useState<boolean>(false);
 
-/*	useEffect(() => {
-		document.documentElement.classList.toggle('locked')
-	}, [active])  
-	
-	под вопросом
-
-	*/
-
 	return (
 		<BurgerMenuContext.Provider value={{active, setActive}}>
 			<Header />
