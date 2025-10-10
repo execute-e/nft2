@@ -140,7 +140,7 @@ const Header: React.FC = () => {
                     <input pattern='^0x[a-fA-F0-9]{40}$' placeholder='Type your wallet address:' maxLength={40} type="text" id="wallet" className={styles.wallet} />
                   </li>
                   <li className={styles.formItem + " " + styles.formError}>
-                    ERROR
+                    {}
                   </li>
                   <li className={styles.formItem}>
                     <button type="submit" className={styles.formButton}>Confirm</button>
