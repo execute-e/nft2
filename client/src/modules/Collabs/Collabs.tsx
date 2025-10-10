@@ -149,23 +149,6 @@ const Collabs: React.FC = () => {
 							/>
 						</a>
 					</li>
-
-					<li className={styles.collab}>
-						<a
-							href='https://x.com/Monadoons'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							<img
-								src={Images.fourteen}
-								alt=''
-								className={styles.image}
-								loading='lazy'
-								decoding='async'
-							/>
-						</a>
-					</li>
-
 					<li className={styles.collab}>
 						<a
 							href='https://x.com/canz_xyz'
@@ -174,22 +157,6 @@ const Collabs: React.FC = () => {
 						>
 							<img
 								src={Images.fifteen}
-								alt=''
-								className={styles.image}
-								loading='lazy'
-								decoding='async'
-							/>
-						</a>
-					</li>
-
-					<li className={styles.collab}>
-						<a
-							href='https://x.com/csfmly'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							<img
-								src={Images.sixteen}
 								alt=''
 								className={styles.image}
 								loading='lazy'
@@ -236,21 +203,6 @@ const Collabs: React.FC = () => {
 						>
 							<img
 								src={Images.five}
-								alt=''
-								className={styles.image}
-								loading='lazy'
-								decoding='async'
-							/>
-						</a>
-					</li>
-					<li className={styles.collab}>
-						<a
-							href='https://x.com/JikunaNft'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							<img
-								src={Images.six}
 								alt=''
 								className={styles.image}
 								loading='lazy'
@@ -311,21 +263,6 @@ const Collabs: React.FC = () => {
 						>
 							<img
 								src={Images.ten}
-								alt=''
-								className={styles.image}
-								loading='lazy'
-								decoding='async'
-							/>
-						</a>
-					</li>
-					<li className={styles.collab}>
-						<a
-							href='https://x.com/DripsterNFT'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							<img
-								src={Images.eleven}
 								alt=''
 								className={styles.image}
 								loading='lazy'
@@ -410,21 +347,6 @@ const Collabs: React.FC = () => {
 					</li>
 					<li className={styles.collab}>
 						<a
-							href='https://x.com/JikunaNft'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							<img
-								src={Images.six}
-								alt=''
-								className={styles.image}
-								loading='lazy'
-								decoding='async'
-							/>
-						</a>
-					</li>
-					<li className={styles.collab}>
-						<a
 							href='https://x.com/monuki_xyz'
 							target='_blank'
 							rel='noopener noreferrer'
@@ -477,21 +399,6 @@ const Collabs: React.FC = () => {
 						>
 							<img
 								src={Images.ten}
-								alt=''
-								className={styles.image}
-								loading='lazy'
-								decoding='async'
-							/>
-						</a>
-					</li>
-					<li className={styles.collab}>
-						<a
-							href='https://x.com/DripsterNFT'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							<img
-								src={Images.eleven}
 								alt=''
 								className={styles.image}
 								loading='lazy'
