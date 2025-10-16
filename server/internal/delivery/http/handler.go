@@ -198,69 +198,70 @@ func (h *Handler) AuthStatus(c *gin.Context) {
 }
 
 func (h *Handler) RegisterForRaffle(c *gin.Context) {
-	sessionCookie, err := c.Cookie(sessionCookieName)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
-		return
-	}
+	c.JSON(http.StatusForbidden, gin.H{"error": "registration is currently disabled"})
+	// sessionCookie, err := c.Cookie(sessionCookieName)
+	// if err != nil {
+	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
+	// 	return
+	// }
 
-	var sessionData usecase.TwitterAuthResult 
-	if err := json.Unmarshal([]byte(sessionCookie), &sessionData); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to parse session"})
-		return
-	}
+	// var sessionData usecase.TwitterAuthResult 
+	// if err := json.Unmarshal([]byte(sessionCookie), &sessionData); err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to parse session"})
+	// 	return
+	// }
 
-	var form domain.RegistrationForm
-	if err := c.ShouldBindJSON(&form); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	// var form domain.RegistrationForm
+	// if err := c.ShouldBindJSON(&form); err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// 	return
+	// }
 
-	var validationErrors []string
+	// var validationErrors []string
 
-	if form.DiscordUsername == "" {
-		validationErrors = append(validationErrors, "discord username is required")
-	} else if len(form.DiscordUsername) < 2 || len(form.DiscordUsername) > 32 {
-		validationErrors = append(validationErrors, "discord username must be 2-32 characters long")
-	} else if !regexp.MustCompile(`^[a-zA-Z0-9_.]+$`).MatchString(form.DiscordUsername) {
-		validationErrors = append(validationErrors, "discord username can only contain letters, numbers, dots and underscores")
-	}
+	// if form.DiscordUsername == "" {
+	// 	validationErrors = append(validationErrors, "discord username is required")
+	// } else if len(form.DiscordUsername) < 2 || len(form.DiscordUsername) > 32 {
+	// 	validationErrors = append(validationErrors, "discord username must be 2-32 characters long")
+	// } else if !regexp.MustCompile(`^[a-zA-Z0-9_.]+$`).MatchString(form.DiscordUsername) {
+	// 	validationErrors = append(validationErrors, "discord username can only contain letters, numbers, dots and underscores")
+	// }
 
-	if form.WalletAddress == "" {
-		validationErrors = append(validationErrors, "wallet address is required")
-	} else if !regexp.MustCompile(`^0x[a-fA-F0-9]{40}$`).MatchString(form.WalletAddress) {
-		validationErrors = append(validationErrors, "invalid ethereum wallet address format")
-	}
+	// if form.WalletAddress == "" {
+	// 	validationErrors = append(validationErrors, "wallet address is required")
+	// } else if !regexp.MustCompile(`^0x[a-fA-F0-9]{40}$`).MatchString(form.WalletAddress) {
+	// 	validationErrors = append(validationErrors, "invalid ethereum wallet address format")
+	// }
 
-	if len(validationErrors) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "validation failed",
-			"details": validationErrors,
-		})
-		return
-	}
+	// if len(validationErrors) > 0 {
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"error": "validation failed",
+	// 		"details": validationErrors,
+	// 	})
+	// 	return
+	// }
 
-	userToRegister := domain.User{
-		TwitterID:        sessionData.TwitterID,
-		TwitterUsername:  sessionData.TwitterUsername,
-		TwitterCreatedAt: sessionData.TwitterCreatedAt,
-		DiscordUsername:  form.DiscordUsername,
-		WalletAddress:    form.WalletAddress,
-	}
+	// userToRegister := domain.User{
+	// 	TwitterID:        sessionData.TwitterID,
+	// 	TwitterUsername:  sessionData.TwitterUsername,
+	// 	TwitterCreatedAt: sessionData.TwitterCreatedAt,
+	// 	DiscordUsername:  form.DiscordUsername,
+	// 	WalletAddress:    form.WalletAddress,
+	// }
 
-	if err := h.raffleService.RegisterUser(c.Request.Context(), &userToRegister); err != nil {
-		if errors.Is(err, domain.ErrUserAlreadyExists) {
-			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
-			return
-		} else if errors.Is(err, domain.ErrUserAlreadyWon) {
-			c.JSON(http.StatusConflict, gin.H{"error": "you have already won the raffle", "details": err.Error()})
-			return
-		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to register user", "details": err.Error()})
-		return
-	}
+	// if err := h.raffleService.RegisterUser(c.Request.Context(), &userToRegister); err != nil {
+	// 	if errors.Is(err, domain.ErrUserAlreadyExists) {
+	// 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+	// 		return
+	// 	} else if errors.Is(err, domain.ErrUserAlreadyWon) {
+	// 		c.JSON(http.StatusConflict, gin.H{"error": "you have already won the raffle", "details": err.Error()})
+	// 		return
+	// 	}
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to register user", "details": err.Error()})
+	// 	return
+	// }
 
-	c.JSON(http.StatusCreated, gin.H{"message": "user registered successfully"})
+	// c.JSON(http.StatusCreated, gin.H{"message": "user registered successfully"})
 }
 
 func (h *Handler) ListParticipants(c *gin.Context) {
