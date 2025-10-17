@@ -17,7 +17,7 @@ const SuccessWindow = ({ isOpen, onClose }: ModalProps) => {
 	const handleShare = () => {
 		const text = `Gmoni
 
-I just took part in the raffle @the_monicorns on the whitelist 
+I just took part in the raffle @the_monicorns on the waitlist 
 
 Participate too https://www.monicorns.xyz
 
@@ -117,7 +117,7 @@ Monicorns are everywhere`
 					</AnimatedContent>
 
 					<p className={styles.subtitle}>
-						Thank you for registering for the giveaway!
+						Thank you for registering for the waitlist!
 					</p>
 
 					<Magnet padding={50} disabled={false} magnetStrength={15}>
