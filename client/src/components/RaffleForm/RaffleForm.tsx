@@ -31,7 +31,6 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 		reset,
-		watch,
 	} = useForm<FormInputs>({
 		defaultValues: initialValues,
 	})
