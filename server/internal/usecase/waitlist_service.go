@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/ItsXomyak/internal/domain"
@@ -43,10 +42,10 @@ func (w *WaitlistService) AddWaitlistEntry(ctx context.Context, entry *domain.Wa
         return domain.ErrWaitlistEntryAlreadyExists
     }
 
-    if !errors.Is(err, domain.ErrNotFound) {
-        logger.Error("failed to check for existing waitlist entry", "error", err)
-        return fmt.Errorf("failed to check for existing entry: %w", err)
-    }
+    // if !errors.Is(err, domain.ErrNotFound) {
+    //     logger.Error("failed to check for existing waitlist entry", "error", err)
+    //     return fmt.Errorf("failed to check for existing entry: %w", err)
+    // }
 
     if err := w.waitlistRepo.AddEntry(ctx, *entry); err != nil {
         logger.Error("failed to add waitlist entry", "error", err)

@@ -390,6 +390,22 @@ func (h *Handler) WaitlistRegister(c *gin.Context) {
         WalletAddress: req.WalletAddress,
     }
 
+	var validationErrors []string
+
+	if entry.WalletAddress == "" {
+		validationErrors = append(validationErrors, "wallet address is required")
+	} else if !regexp.MustCompile(`^0x[a-fA-F0-9]{40}$`).MatchString(entry.WalletAddress) {
+		validationErrors = append(validationErrors, "invalid ethereum wallet address format")
+	}
+
+	if len(validationErrors) > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "validation failed",
+			"details": validationErrors,
+		})
+		return
+	}
+
     if err := h.waitlistService.AddWaitlistEntry(c.Request.Context(), entry); err != nil {
         if errors.Is(err, domain.ErrWaitlistEntryAlreadyExists) {
             c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
