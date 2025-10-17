@@ -2,44 +2,29 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import type { SubmitHandler } from 'react-hook-form'
 import styles from './index.module.scss'
-import xIcon from './images/x.svg'
 import ModalWindow from '../ModalWindow/ModalWindow'
 import { lazy, Suspense } from 'react'
 import SuccessWindow from '../FinalResModal/SuccessPassModal'
 
 const WinnersTable = lazy(() => import('../WinnersTable/WinnersTable'))
 
-type TwitterUser = {
-	username: string
-	id: string
-}
-
 type FormInputs = {
-	discordUsername: string
 	walletAddress: string
 }
 
 interface RaffleFormProps {
 	imageUrl?: string
 	onSubmitSuccess?: (data: any) => void
-	initialTwitterUser?: TwitterUser | null
 }
 
-export const RaffleForm = ({
-	imageUrl,
-	onSubmitSuccess,
-	initialTwitterUser,
-}: RaffleFormProps) => {
-	const [twitterUser, setTwitterUser] = useState<TwitterUser | null>(
-		initialTwitterUser || null
-	)
+export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 	const [submissionError, setSubmissionError] = useState<string | null>(null)
 	const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false)
 
 	const savedData = sessionStorage.getItem('raffleFormData')
 	const initialValues = savedData
 		? JSON.parse(savedData)
-		: { discordUsername: '', walletAddress: '' }
+		: { walletAddress: '' }
 
 	const {
 		register,
@@ -53,62 +38,17 @@ export const RaffleForm = ({
 
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
-	useEffect(() => {
-		if (initialTwitterUser) {
-			setTwitterUser(initialTwitterUser)
-		}
-	}, [initialTwitterUser])
-
-	useEffect(() => {
-		const subscription = watch(value => {
-			sessionStorage.setItem('raffleFormData', JSON.stringify(value))
-		})
-		return () => subscription.unsubscribe()
-	}, [watch])
-
-	const handleTwitterLogin = async () => {
-		try {
-			// 1. Делаем fetch-запрос на наш бэкенд
-			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/auth/twitter/login`,
-				{
-					method: 'GET',
-					credentials: 'include',
-				}
-			)
-
-			if (!response.ok) {
-				throw new Error('Failed to get auth URL')
-			}
-
-			const data = await response.json()
-			const authUrl = data.authorization_url
-
-			if (authUrl) {
-				window.location.href = authUrl
-			}
-		} catch (error) {
-			console.error('Login failed:', error)
-		}
-	}
-
 	const onSubmit: SubmitHandler<FormInputs> = async data => {
 		setSubmissionError(null)
 
-		if (!twitterUser) {
-			alert('Please connect your Twitter account first.')
-			return
-		}
-
 		try {
 			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/raffle/register`,
+				`${import.meta.env.VITE_API_BASE_URL}/waitlist/register`,
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					credentials: 'include',
 					body: JSON.stringify({
-						discord_username: data.discordUsername,
 						wallet_address: data.walletAddress,
 					}),
 				}
@@ -125,9 +65,10 @@ export const RaffleForm = ({
 				onSubmitSuccess(result)
 			}
 
+			setIsSuccessModalOpen(true)
+
 			sessionStorage.removeItem('raffleFormData')
 			reset()
-			setTwitterUser(null)
 		} catch (error: any) {
 			// console.error('Submission error:', error)
 			setSubmissionError(error.message)
@@ -139,53 +80,13 @@ export const RaffleForm = ({
 			<div className={styles.formPanel}>
 				<div className={styles.formOverlay}>
 					<form onSubmit={handleSubmit(onSubmit)}>
-						<h2 className={styles.formTitle}>Join the Giveaway</h2>
+						<h2 className={styles.formTitle}>Join the waitlist!</h2>
 						<p className={styles.formSubtitle}>
-							Complete the steps below to enter.
+							To participate in the whitelist follow these steps.
 						</p>
 
 						<div className={styles.inputGroup}>
-							<label>Step 1: Log in via X</label>
-							{twitterUser ? (
-								<div className={styles.twitterSuccess}>
-									<span className={styles.checkmark}>✓</span> Connected as @
-									{twitterUser.username}
-								</div>
-							) : (
-								<button
-									type='button'
-									onClick={handleTwitterLogin}
-									className={styles.twitterButton}
-								>
-									Connect with <img src={xIcon} alt='X' />
-								</button>
-							)}
-						</div>
-
-						<div className={styles.inputGroup}>
-							<label htmlFor='discord'>
-								Step 2: Enter your Discord nickname
-							</label>
-							<input
-								id='discord'
-								placeholder='e.g., liteplay2'
-								{...register('discordUsername', {
-									required: 'Your Discord nickname is required.',
-									pattern: {
-										value: /^[a-zA-Z0-9_.]{2,32}$/,
-										message: 'Invalid format. Example: liteplay2',
-									},
-								})}
-							/>
-							{errors.discordUsername && (
-								<p className={styles.error}>{errors.discordUsername.message}</p>
-							)}
-						</div>
-
-						<div className={styles.inputGroup}>
-							<label htmlFor='wallet'>
-								Step 3: Provide your Wallet Address
-							</label>
+							<label htmlFor='wallet'>Provide your Wallet Address</label>
 							<input
 								id='wallet'
 								placeholder='0x...'
@@ -207,7 +108,7 @@ export const RaffleForm = ({
 							disabled={isSubmitting}
 							className={styles.submitButton}
 						>
-							{isSubmitting ? 'Submitting...' : 'Enter Giveaway'}
+							{isSubmitting ? 'Submitting...' : 'Enter Waitlist'}
 						</button>
 						{submissionError && (
 							<p className={styles.submissionError}>{submissionError}</p>
@@ -250,7 +151,7 @@ export const RaffleForm = ({
 						Open Winners Table
 					</a>
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
-						<Suspense fallback={<div>Загрузка...</div>}>
+						<Suspense fallback={<div>Loading...</div>}>
 							<WinnersTable />
 						</Suspense>
 					</ModalWindow>

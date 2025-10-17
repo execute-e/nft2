@@ -136,6 +136,24 @@ tbody tr:hover {
 	display: block;
 }
 
+.main-nav {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+.nav-btn {
+    background-color: #ecf0f1;
+    color: #333;
+    font-weight: bold;
+}
+.nav-btn.active {
+    background-color: #3498db;
+    color: white;
+}
+.hidden {
+    display: none;
+}
+
 @media (max-width: 900px) {
 	.main-content {
 		flex-direction: column;

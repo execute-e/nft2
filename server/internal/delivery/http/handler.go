@@ -32,10 +32,11 @@ var (
 type Handler struct {
 	authService *usecase.AuthService
 	raffleService *usecase.RaffleService
+	waitlistService *usecase.WaitlistService
 }
 
-func NewHandler(authService *usecase.AuthService, raffleService *usecase.RaffleService) *Handler {
-	return &Handler{authService: authService, raffleService: raffleService}
+func NewHandler(authService *usecase.AuthService, raffleService *usecase.RaffleService, waitlistService *usecase.WaitlistService) *Handler {
+	return &Handler{authService: authService, raffleService: raffleService, waitlistService: waitlistService}
 }
 
 func (h *Handler) TwitterLogin(c *gin.Context) {
@@ -372,4 +373,71 @@ func (h *Handler) ListPublicWinners(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, winners)
+}
+
+type WaitlistRequest struct {
+    WalletAddress string `json:"wallet_address" binding:"required,eth_addr"`
+}
+
+func (h *Handler) WaitlistRegister(c *gin.Context) {
+    var req WaitlistRequest
+    if err := c.ShouldBindJSON(&req); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid wallet address provided", "details": err.Error()})
+        return
+    }
+
+    entry := &domain.Waitlist{
+        WalletAddress: req.WalletAddress,
+    }
+
+    if err := h.waitlistService.AddWaitlistEntry(c.Request.Context(), entry); err != nil {
+        if errors.Is(err, domain.ErrWaitlistEntryAlreadyExists) {
+            c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+            return
+        }
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register wallet address"})
+        return
+    }
+
+    c.JSON(http.StatusCreated, gin.H{"message": "Wallet address registered successfully"})
+}
+
+func (h *Handler) ListWaitlistEntries(c *gin.Context) {
+	entries, err := h.waitlistService.GetAllWaitlistEntries(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve waitlist entries", "details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, entries)
+}
+
+func (h *Handler) TruncateWaitlist(c *gin.Context) {
+	if err := h.waitlistService.TruncateWaitlist(c.Request.Context()); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to truncate waitlist", "details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "waitlist truncated successfully"})
+}
+
+func (h *Handler) DeleteWaitlistEntryByID(c *gin.Context) {
+	idStr := c.Param("id")
+
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format, must be a number"})
+		return
+	}
+
+	err = h.waitlistService.DeleteWaitlistEntryByID(c.Request.Context(), id)
+	if err != nil {
+		if errors.Is(err, domain.ErrUserNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete waitlist entry", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Waitlist entry deleted successfully"})
 }

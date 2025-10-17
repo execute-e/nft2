@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Админ-панель Розыгрыша</title>
+		<title>Админ-панель</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
@@ -19,66 +19,97 @@
 				/>
 				<button id="save-token">Сохранить</button>
 			</div>
-
 			<div id="status-message"></div>
 
-			<main class="main-content">
-				<div class="panel">
-					<h2>Участники (<span id="participants-count">0</span>)</h2>
-					<div class="actions">
-						<button id="refresh-participants">Обновить список</button>
-						<button id="clear-participants" class="danger">
-							Очистить всех
-						</button>
-					</div>
-					<div class="table-container">
-						<table id="participants-table">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Twitter</th>
-									<th>Discord</th>
-									<th>Wallet</th>
-									<th>Действия</th>
-								</tr>
-							</thead>
-							<tbody id="participants-body"></tbody>
-						</table>
-					</div>
-				</div>
+			<nav class="main-nav">
+				<button id="nav-raffle" class="nav-btn active">
+					Управление Розыгрышем
+				</button>
+				<button id="nav-waitlist" class="nav-btn">Управление Вайтлистом</button>
+			</nav>
 
-				<div class="panel">
-					<h2>Победители (<span id="winners-count">0</span>)</h2>
-					<form id="select-winners-form" class="actions">
-						<input
-							type="number"
-							id="winners-limit"
-							min="1"
-							value="1"
-							required
-						/>
-						<button type="submit">Выбрать победителей</button>
-					</form>
-					<div class="actions">
-						<button id="refresh-winners">Обновить список</button>
-						<button id="clear-winners" class="danger">Очистить всех</button>
+			<div id="raffle-view">
+				<main class="main-content">
+					<div class="panel">
+						<h2>Участники (<span id="participants-count">0</span>)</h2>
+						<div class="actions">
+							<button id="refresh-participants">Обновить список</button>
+							<button id="clear-participants" class="danger">
+								Очистить всех
+							</button>
+						</div>
+						<div class="table-container">
+							<table id="participants-table">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Twitter</th>
+										<th>Discord</th>
+										<th>Wallet</th>
+										<th>Действия</th>
+									</tr>
+								</thead>
+								<tbody id="participants-body"></tbody>
+							</table>
+						</div>
 					</div>
-					<div class="table-container">
-						<table id="winners-table">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Twitter</th>
-									<th>Discord</th>
-									<th>Wallet</th>
-									<th>Действия</th>
-								</tr>
-							</thead>
-							<tbody id="winners-body"></tbody>
-						</table>
+					<div class="panel">
+						<h2>Победители (<span id="winners-count">0</span>)</h2>
+						<form id="select-winners-form" class="actions">
+							<input
+								type="number"
+								id="winners-limit"
+								min="1"
+								value="1"
+								required
+							/>
+							<button type="submit">Выбрать победителей</button>
+						</form>
+						<div class="actions">
+							<button id="refresh-winners">Обновить список</button>
+							<button id="clear-winners" class="danger">Очистить всех</button>
+						</div>
+						<div class="table-container">
+							<table id="winners-table">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Twitter</th>
+										<th>Discord</th>
+										<th>Wallet</th>
+										<th>Действия</th>
+									</tr>
+								</thead>
+								<tbody id="winners-body"></tbody>
+							</table>
+						</div>
 					</div>
-				</div>
-			</main>
+				</main>
+			</div>
+
+			<div id="waitlist-view" class="hidden">
+				<main class="main-content">
+					<div class="panel">
+						<h2>Вайтлист (<span id="waitlist-count">0</span>)</h2>
+						<div class="actions">
+							<button id="refresh-waitlist">Обновить список</button>
+							<button id="clear-waitlist" class="danger">Очистить всех</button>
+						</div>
+						<div class="table-container">
+							<table id="waitlist-table">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Wallet</th>
+										<th>Действия</th>
+									</tr>
+								</thead>
+								<tbody id="waitlist-body"></tbody>
+							</table>
+						</div>
+					</div>
+				</main>
+			</div>
 		</div>
 		<script src="script.js"></script>
 	</body>

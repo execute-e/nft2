@@ -45,13 +45,15 @@ func main() {
 
 	userRepo := repository.NewUserRepository(pg.Pool)
 	winnerRepo := repository.NewWinnerRepository(pg.Pool)
+	waitlistRepo := repository.NewWaitlistRepository(pg.Pool)
 
 	twitterClient := twitter.NewClient(Cfg.Twitter.APIKey, Cfg.Twitter.APISecret, Cfg.CallbackURL)
 
 	authService := usecase.NewAuthService(twitterClient)
 	raffleService := usecase.NewRaffleService(userRepo, winnerRepo)
+	waitlistService := usecase.NewWaitlistService(waitlistRepo)
 
-	handler := httpHandler.NewHandler(authService, raffleService)
+	handler := httpHandler.NewHandler(authService, raffleService, waitlistService)
 
 	router := gin.Default()
 
