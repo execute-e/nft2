@@ -31,31 +31,52 @@ document.addEventListener('DOMContentLoaded', () => {
 	const waitlistBody = document.getElementById('waitlist-body')
 
 	// --- АУТЕНТИФИКАЦИЯ ---
-	tokenInput.value = sessionStorage.getItem('adminToken') || ''
+	// Загрузка токена из sessionStorage при запуске
+	const savedToken = sessionStorage.getItem('adminToken')
+	if (savedToken) {
+		tokenInput.value = savedToken
+	}
+
+	// Сохранение токена
 	saveTokenBtn.addEventListener('click', () => {
-		sessionStorage.setItem('adminToken', tokenInput.value)
-		showStatus('Токен сохранен в сессии.', 'success')
+		const token = tokenInput.value.trim()
+		if (!token) {
+			showStatus('Ошибка: Введите токен.', 'error')
+			return
+		}
+		sessionStorage.setItem('adminToken', token)
+		showStatus('Токен успешно сохранен в сессии.', 'success')
+		// Автоматически загружаем данные после сохранения токена
+		loadParticipants()
+		loadWinners()
 	})
 
-	// 🔥 ФИКС: Реализована полная функция
+	// Получение заголовка авторизации
 	const getAuthHeader = () => {
 		const token = sessionStorage.getItem('adminToken')
 		if (!token) {
-			showStatus('Ошибка: Admin Token не установлен.', 'error')
+			showStatus(
+				'Ошибка: Admin Token не установлен. Сохраните токен сначала.',
+				'error'
+			)
 			return null
 		}
 		return { Authorization: `Bearer ${token}` }
 	}
 
-	// --- Утилиты ---
-	// 🔥 ФИКС: Реализована полная функция
+	// --- УТИЛИТЫ ---
+	// Показать статус-сообщение
 	const showStatus = (message, type) => {
 		statusMessage.textContent = message
 		statusMessage.className = type
-		setTimeout(() => (statusMessage.className = ''), 4000)
+		statusMessage.style.display = 'block'
+		setTimeout(() => {
+			statusMessage.className = ''
+			statusMessage.style.display = 'none'
+		}, 4000)
 	}
 
-	// 🔥 ФИКС: Реализована полная функция
+	// Универсальная функция для запросов к API
 	const fetchData = async (endpoint, options = {}) => {
 		const headers = getAuthHeader()
 		if (!headers) return null
@@ -63,24 +84,44 @@ document.addEventListener('DOMContentLoaded', () => {
 		try {
 			const response = await fetch(`${API_BASE_URL}${endpoint}`, {
 				...options,
-				headers: { ...headers, ...options.headers },
+				headers: {
+					...headers,
+					'Content-Type': 'application/json',
+					...options.headers,
+				},
 			})
+
+			// Проверка статуса ответа
 			if (!response.ok) {
-				const err = await response
-					.json()
-					.catch(() => ({ error: `HTTP error! Status: ${response.status}` }))
-				throw new Error(err.error || 'Unknown server error')
+				let errorMessage = `HTTP ошибка! Статус: ${response.status}`
+				try {
+					const errorData = await response.json()
+					errorMessage = errorData.error || errorData.message || errorMessage
+				} catch (e) {
+					// Если не удалось распарсить JSON, используем текстовое сообщение
+					const errorText = await response.text()
+					if (errorText) errorMessage = errorText
+				}
+				throw new Error(errorMessage)
 			}
-			if (
-				response.status === 204 ||
-				(response.status === 200 &&
-					response.headers.get('Content-Length') === '0')
-			) {
-				return true // Возвращаем true для успешных DELETE/POST без ответа
+
+			// Обработка пустых ответов (для DELETE запросов)
+			const contentType = response.headers.get('content-type')
+			const contentLength = response.headers.get('content-length')
+
+			if (response.status === 204 || contentLength === '0') {
+				return true
 			}
-			return await response.json()
+
+			// Если есть JSON в ответе
+			if (contentType && contentType.includes('application/json')) {
+				return await response.json()
+			}
+
+			return true
 		} catch (error) {
 			showStatus(`Ошибка: ${error.message}`, 'error')
+			console.error('Fetch error:', error)
 			return null
 		}
 	}
@@ -88,92 +129,108 @@ document.addEventListener('DOMContentLoaded', () => {
 	// --- ФУНКЦИИ РЕНДЕРА ---
 	const renderRaffleTable = (data, bodyElement, countElement) => {
 		bodyElement.innerHTML = ''
-		const items = data || []
+		const items = Array.isArray(data) ? data : []
 		countElement.textContent = items.length
+
 		if (items.length === 0) {
-			bodyElement.innerHTML = '<tr><td colspan="5">Нет данных</td></tr>'
+			bodyElement.innerHTML =
+				'<tr><td colspan="5" style="text-align: center;">Нет данных</td></tr>'
 			return
 		}
+
 		items.forEach(item => {
-			const row = `
-                <tr>
-                    <td>${item.id}</td>
-                    <td>${item.twitter_username}</td>
-                    <td>${item.discord_username}</td>
-                    <td>${item.wallet_address}</td>
-                    <td>
-                        <button class="small-danger delete-btn" data-id="${
-													item.id
-												}" data-type="${
-				bodyElement.id.includes('participant') ? 'participant' : 'winner'
-			}">
-                            Удалить
-                        </button>
-                    </td>
-                </tr>
-            `
-			bodyElement.insertAdjacentHTML('beforeend', row)
+			const type = bodyElement.id.includes('participant')
+				? 'participant'
+				: 'winner'
+			const row = document.createElement('tr')
+			row.innerHTML = `
+				<td>${item.id || '-'}</td>
+				<td>${item.twitter_username || '-'}</td>
+				<td>${item.discord_username || '-'}</td>
+				<td>${item.wallet_address || '-'}</td>
+				<td>
+					<button class="small-danger delete-btn" data-id="${
+						item.id
+					}" data-type="${type}">
+						Удалить
+					</button>
+				</td>
+			`
+			bodyElement.appendChild(row)
 		})
 	}
 
 	const renderWaitlistTable = data => {
 		waitlistBody.innerHTML = ''
-		const items = data || []
+		const items = Array.isArray(data) ? data : []
 		waitlistCount.textContent = items.length
+
 		if (items.length === 0) {
-			waitlistBody.innerHTML = '<tr><td colspan="3">Нет данных</td></tr>'
+			waitlistBody.innerHTML =
+				'<tr><td colspan="3" style="text-align: center;">Нет данных</td></tr>'
 			return
 		}
+
 		items.forEach(item => {
-			const row = `
-                <tr>
-                    <td>${item.id}</td>
-                    <td>${item.wallet_address}</td>
-                    <td>
-                        <button class="small-danger delete-btn" data-id="${item.id}" data-type="waitlist">
-                            Удалить
-                        </button>
-                    </td>
-                </tr>
-            `
-			waitlistBody.insertAdjacentHTML('beforeend', row)
+			const row = document.createElement('tr')
+			row.innerHTML = `
+				<td>${item.id || '-'}</td>
+				<td>${item.wallet_address || '-'}</td>
+				<td>
+					<button class="small-danger delete-btn" data-id="${
+						item.id
+					}" data-type="waitlist">
+						Удалить
+					</button>
+				</td>
+			`
+			waitlistBody.appendChild(row)
 		})
 	}
 
 	// --- ОБРАБОТЧИКИ ДЕЙСТВИЙ ---
 	const loadParticipants = async () => {
 		const data = await fetchData('/participants')
-		renderRaffleTable(data, participantsBody, participantsCount)
+		if (data) {
+			renderRaffleTable(data, participantsBody, participantsCount)
+		}
 	}
 
 	const loadWinners = async () => {
 		const data = await fetchData('/winners')
-		renderRaffleTable(data, winnersBody, winnersCount)
+		if (data) {
+			renderRaffleTable(data, winnersBody, winnersCount)
+		}
 	}
 
 	const loadWaitlist = async () => {
 		const data = await fetchData('/waitlist')
-		renderWaitlistTable(data)
+		if (data) {
+			renderWaitlistTable(data)
+		}
 	}
 
+	// Очистка всех участников
 	clearParticipantsBtn.addEventListener('click', async () => {
 		if (!confirm('Вы уверены, что хотите удалить ВСЕХ участников?')) return
 		const result = await fetchData('/participants', { method: 'DELETE' })
 		if (result) {
-			showStatus('Все участники удалены.', 'success')
+			showStatus('Все участники успешно удалены.', 'success')
 			loadParticipants()
 		}
 	})
 
+	// Очистка всех победителей
 	clearWinnersBtn.addEventListener('click', async () => {
 		if (!confirm('Вы уверены, что хотите удалить ВСЕХ победителей?')) return
 		const result = await fetchData('/winners', { method: 'DELETE' })
 		if (result) {
-			showStatus('Все победители удалены.', 'success')
+			showStatus('Все победители успешно удалены.', 'success')
 			loadWinners()
 		}
 	})
 
+	// Очистка вайтлиста
 	clearWaitlistBtn.addEventListener('click', async () => {
 		if (!confirm('Вы уверены, что хотите очистить ВЕСЬ вайтлист?')) return
 		const result = await fetchData('/waitlist', { method: 'DELETE' })
@@ -183,51 +240,67 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	})
 
+	// Выбор победителей
 	selectWinnersForm.addEventListener('submit', async e => {
 		e.preventDefault()
 		const limit = parseInt(winnersLimitInput.value, 10)
-		if (limit < 1) {
-			showStatus('Лимит должен быть больше 0.', 'error')
+
+		if (isNaN(limit) || limit < 1) {
+			showStatus('Ошибка: Лимит должен быть числом больше 0.', 'error')
 			return
 		}
+
 		const newWinners = await fetchData('/winners', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ limit }),
 		})
+
 		if (newWinners) {
-			showStatus(`${newWinners.length} победителей выбрано!`, 'success')
+			const count = Array.isArray(newWinners) ? newWinners.length : 0
+			showStatus(`Успех! Выбрано победителей: ${count}`, 'success')
 			loadParticipants()
 			loadWinners()
 		}
 	})
 
+	// Удаление отдельной записи
 	document.body.addEventListener('click', async e => {
 		if (e.target && e.target.matches('.delete-btn')) {
 			const id = e.target.dataset.id
 			const type = e.target.dataset.type
-			if (!confirm(`Удалить запись с ID ${id}?`)) return
+
+			if (!id || !type) {
+				showStatus('Ошибка: Не удалось определить ID или тип записи.', 'error')
+				return
+			}
+
+			if (!confirm(`Вы действительно хотите удалить запись с ID ${id}?`)) return
 
 			let endpoint = ''
 			let reloadFunction = null
 
-			if (type === 'participant') {
-				endpoint = `/participants/${id}`
-				reloadFunction = loadParticipants
-			} else if (type === 'winner') {
-				endpoint = `/winners/${id}`
-				reloadFunction = loadWinners
-			} else if (type === 'waitlist') {
-				endpoint = `/waitlist/${id}`
-				reloadFunction = loadWaitlist
+			switch (type) {
+				case 'participant':
+					endpoint = `/participants/${id}`
+					reloadFunction = loadParticipants
+					break
+				case 'winner':
+					endpoint = `/winners/${id}`
+					reloadFunction = loadWinners
+					break
+				case 'waitlist':
+					endpoint = `/waitlist/${id}`
+					reloadFunction = loadWaitlist
+					break
+				default:
+					showStatus('Ошибка: Неизвестный тип записи.', 'error')
+					return
 			}
 
-			if (endpoint) {
-				const result = await fetchData(endpoint, { method: 'DELETE' })
-				if (result) {
-					showStatus(`Запись с ID ${id} удалена.`, 'success')
-					reloadFunction()
-				}
+			const result = await fetchData(endpoint, { method: 'DELETE' })
+			if (result) {
+				showStatus(`Запись с ID ${id} успешно удалена.`, 'success')
+				if (reloadFunction) reloadFunction()
 			}
 		}
 	})
@@ -248,11 +321,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		loadWaitlist()
 	})
 
-	// --- ЗАГРУЗКА ДАННЫХ ---
+	// --- ОБРАБОТЧИКИ ОБНОВЛЕНИЯ ---
 	refreshParticipantsBtn.addEventListener('click', loadParticipants)
 	refreshWinnersBtn.addEventListener('click', loadWinners)
 	refreshWaitlistBtn.addEventListener('click', loadWaitlist)
 
+	// --- АВТОЗАГРУЗКА ДАННЫХ ---
+	// Если токен уже сохранен, загружаем данные при старте
 	if (sessionStorage.getItem('adminToken')) {
 		loadParticipants()
 		loadWinners()

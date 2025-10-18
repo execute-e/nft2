@@ -17,9 +17,9 @@ const SuccessWindow = ({ isOpen, onClose }: ModalProps) => {
 	const handleShare = () => {
 		const text = `Gmoni
 
-I just took part in the raffle @the_monicorns on the waitlist 
+I just took part in @the_monicorns on the waitlist 
 
-Participate too https://www.monicorns.xyz
+Join too https://www.monicorns.xyz
 
 Monicorns are everywhere`
 
@@ -117,7 +117,7 @@ Monicorns are everywhere`
 					</AnimatedContent>
 
 					<p className={styles.subtitle}>
-						Thank you for registering for the waitlist!
+						Thank you for participating in the waitlist!
 					</p>
 
 					<Magnet padding={50} disabled={false} magnetStrength={15}>
@@ -129,10 +129,7 @@ Monicorns are everywhere`
 					</Magnet>
 
 					<div className={styles.textContainer}>
-						<p className={styles.joinText}>
-							By publishing a post about our giveaway, you'll get additional
-							chances to win!
-						</p>
+						<p className={styles.joinText}>You can share the post on X</p>
 					</div>
 
 					<FadeContent>
