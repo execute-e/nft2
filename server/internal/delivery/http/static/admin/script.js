@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			row.innerHTML = `
 				<td>${item.id || '-'}</td>
 				<td>${item.wallet_address || '-'}</td>
+				<td>${item.joined_at ? new Date(item.joined_at).toLocaleString() : '-'}</td>
 				<td>
 					<button class="small-danger delete-btn" data-id="${
 						item.id
