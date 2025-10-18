@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
 			<div className={styles.image}></div>
 			<div className={styles.info}>
 				<button onClick={() => setIsOpen(true)} className={styles.button}>
-					Join the waitlist!
+					Register for FCFS
 				</button>
 				<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
 					<RaffleForm />

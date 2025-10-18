@@ -202,14 +202,12 @@ const Header: React.FC = () => {
 				<div className={styles.buttonOverlay}>
 					<Magnet padding={50} disabled={false} magnetStrength={15}>
 						<button onClick={() => setIsOpen(true)} className={styles.button}>
-							Join the waitlist!
+							Register for FCFS
 						</button>
 					</Magnet>
 
 					<ModalWindow isOpen={isOpen} onClose={() => setIsOpen(false)}>
-						<RaffleForm
-							onSubmitSuccess={handleRaffleSuccess}
-						/>
+						<RaffleForm onSubmitSuccess={handleRaffleSuccess} />
 					</ModalWindow>
 
 					<ModalWindow isOpen={isOpenW} onClose={() => setIsOpenW(false)}>

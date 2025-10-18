@@ -79,7 +79,7 @@ export const RaffleForm = ({ imageUrl, onSubmitSuccess }: RaffleFormProps) => {
 			<div className={styles.formPanel}>
 				<div className={styles.formOverlay}>
 					<form onSubmit={handleSubmit(onSubmit)}>
-						<h2 className={styles.formTitle}>Join the waitlist!</h2>
+						<h2 className={styles.formTitle}>Join FCFS waitlist!</h2>
 						<p className={styles.formSubtitle}>
 							To participate in the whitelist follow these steps.
 						</p>
