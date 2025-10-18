@@ -35,7 +35,7 @@ func (w *WaitlistService) TruncateWaitlist(ctx context.Context) error {
 func (w *WaitlistService) AddWaitlistEntry(ctx context.Context, entry *domain.Waitlist) error {
     logger.Debug("adding waitlist entry", "wallet_address", entry.WalletAddress)
 
-    _, err := w.waitlistRepo.FindByWalletAddress(ctx, entry.WalletAddress)
+    _, err := w.waitlistRepo.FindByWalletAddress(ctx, *entry.WalletAddress)
 
     if err == nil {
         logger.Warn("waitlist entry already exists", "wallet_address", entry.WalletAddress)

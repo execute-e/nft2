@@ -387,14 +387,14 @@ func (h *Handler) WaitlistRegister(c *gin.Context) {
     }
 
     entry := &domain.Waitlist{
-        WalletAddress: req.WalletAddress,
+        WalletAddress: &req.WalletAddress,
     }
 
 	var validationErrors []string
 
-	if entry.WalletAddress == "" {
+	if *entry.WalletAddress == "" {
 		validationErrors = append(validationErrors, "wallet address is required")
-	} else if !regexp.MustCompile(`^0x[a-fA-F0-9]{40}$`).MatchString(entry.WalletAddress) {
+	} else if !regexp.MustCompile(`^0x[a-fA-F0-9]{40}$`).MatchString(*entry.WalletAddress) {
 		validationErrors = append(validationErrors, "invalid ethereum wallet address format")
 	}
 
