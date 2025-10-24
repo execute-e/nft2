@@ -531,7 +531,7 @@ func (h *Handler) DeleteWaitlistEntryByWalletAddress(c *gin.Context) {
 
 	err := h.waitlistResService.DeleteWaitlistResultByWalletAddress(c.Request.Context(), walletAddress)
 	if err != nil {
-		if errors.Is(err, domain.ErrNotFound) { // Предполагаем, что usecase вернет ErrNotFound
+		if errors.Is(err, domain.ErrNotFound) { 
 			c.JSON(http.StatusNotFound, gin.H{"error": domain.ErrResultNotFound.Error()})
 			return
 		}
