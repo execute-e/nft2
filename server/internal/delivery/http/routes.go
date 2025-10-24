@@ -38,7 +38,7 @@ func RegisterRoutes(router *gin.Engine, h *Handler, adminToken, sessionSecret st
 	waitlistGroup := router.Group("/waitlist")
 	{
 		waitlistGroup.POST("/register", h.WaitlistRegister)	 // POST /waitlist/register
-
+		waitlistGroup.POST("/check", h.CheckWaitlistResult) // POST /waitlist/check
 	}
 	
 	raffleGroup := router.Group("/raffle")
@@ -61,5 +61,9 @@ func RegisterRoutes(router *gin.Engine, h *Handler, adminToken, sessionSecret st
 		adminGroup.DELETE("/winners", h.TruncateWinners)    // DELETE /admin/winners
 		adminGroup.GET("/winners", h.ListWinners)          // GET /admin/winners
 		adminGroup.DELETE("/winners/:id", h.DeleteWinnerByID) // DELETE /admin/winners/:id
+
+		adminGroup.GET("/waitlist-res", h.ListWaitlistResEntries) // GET /admin/waitlist-res
+		adminGroup.DELETE("/waitlist-res", h.TruncateWaitlistRes)	// DELETE /admin/waitlist-res
+		adminGroup.DELETE("/waitlist-res/:id", h.DeleteWaitlistEntryByWalletAddress) // DELETE /admin/waitlist-res/:id
 	}
 }

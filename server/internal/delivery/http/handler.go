@@ -33,6 +33,7 @@ type Handler struct {
 	authService *usecase.AuthService
 	raffleService *usecase.RaffleService
 	waitlistService *usecase.WaitlistService
+	waitlistResService *usecase.WaitlistResService
 }
 
 func NewHandler(authService *usecase.AuthService, raffleService *usecase.RaffleService, waitlistService *usecase.WaitlistService) *Handler {
@@ -456,4 +457,87 @@ func (h *Handler) DeleteWaitlistEntryByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Waitlist entry deleted successfully"})
+}
+
+/* =============================== waitlist_res handlers =============================== */
+
+type WaitlistResRequest struct {
+	WalletAddress string `json:"wallet_address" binding:"required,eth_addr"`
+}
+
+// CheckWaitlistResult - Публичный эндпоинт для проверки кошелька
+func (h *Handler) CheckWaitlistResult(c *gin.Context) {
+	var req WaitlistRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid wallet address provided"})
+		return
+	}
+
+	// Вызываем usecase
+	result, err := h.waitlistResService.GetWaitlistResultByWalletAddress(c.Request.Context(), req.WalletAddress)
+
+	// Обрабатываем ошибки
+	if err != nil {
+		if errors.Is(err, domain.ErrNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": domain.ErrResultNotFound.Error()}) // Используем текст из доменной ошибки
+			return
+		}
+		if errors.Is(err, domain.ErrResultAlreadyChecked) { // Если usecase возвращает эту ошибку
+			c.JSON(http.StatusConflict, gin.H{"error": domain.ErrResultAlreadyChecked.Error()})
+			return
+		}
+		// Общая ошибка
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check waitlist status"})
+		return
+	}
+
+	// Успех - возвращаем только сам результат
+	c.JSON(http.StatusOK, gin.H{"result": result.Result})
+}
+
+
+// --- АДМИНСКИЕ ХЕНДЛЕРЫ ---
+
+// ListWaitlistEntries - Получить весь список вайтлиста (админ)
+func (h *Handler) ListWaitlistResEntries(c *gin.Context) {
+	entries, err := h.waitlistResService.GetAllWaitlistResults(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve waitlist entries", "details": err.Error()})
+		return
+	}
+	// Если список пуст, возвращаем пустой массив, а не null
+	if entries == nil {
+		entries = []domain.WaitlistResult{}
+	}
+	c.JSON(http.StatusOK, entries)
+}
+
+// TruncateWaitlist - Очистить весь вайтлист (админ)
+func (h *Handler) TruncateWaitlistRes(c *gin.Context) {
+	if err := h.waitlistResService.TruncateWaitlistResults(c.Request.Context()); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to truncate waitlist", "details": err.Error()})
+		return
+	}
+	c.Status(http.StatusNoContent)
+}
+
+func (h *Handler) DeleteWaitlistEntryByWalletAddress(c *gin.Context) {
+	// Получаем адрес из URL параметра, например /admin/waitlist/address/0x123...
+	walletAddress := c.Param("walletAddress")
+	if walletAddress == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Wallet address parameter is missing"})
+		return
+	}
+
+	err := h.waitlistResService.DeleteWaitlistResultByWalletAddress(c.Request.Context(), walletAddress)
+	if err != nil {
+		if errors.Is(err, domain.ErrNotFound) { // Предполагаем, что usecase вернет ErrNotFound
+			c.JSON(http.StatusNotFound, gin.H{"error": domain.ErrResultNotFound.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete waitlist entry", "details": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent) 
 }
