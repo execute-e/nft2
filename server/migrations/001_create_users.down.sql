@@ -1,2 +1,4 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS winners;
+DROP TABLE IF EXISTS waitlist;
+DROP TABLE IF EXISTS waitlist_result;

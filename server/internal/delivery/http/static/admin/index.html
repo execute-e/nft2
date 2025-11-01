@@ -25,7 +25,10 @@
 				<button id="nav-raffle" class="nav-btn active">
 					Управление Розыгрышем
 				</button>
-				<button id="nav-waitlist" class="nav-btn">Управление Вайтлистом</button>
+				<button id="nav-waitlist" class="nav-btn">Вайтлист (Заявки)</button>
+				<button id="nav-waitlist-res" class="nav-btn">
+					Вайтлист (Результаты)
+				</button>
 			</nav>
 
 			<div id="raffle-view">
@@ -90,7 +93,7 @@
 			<div id="waitlist-view" class="hidden">
 				<main class="main-content">
 					<div class="panel">
-						<h2>Вайтлист (<span id="waitlist-count">0</span>)</h2>
+						<h2>Вайтлист (Заявки) (<span id="waitlist-count">0</span>)</h2>
 						<div class="actions">
 							<button id="refresh-waitlist">Обновить список</button>
 							<button id="clear-waitlist" class="danger">Очистить всех</button>
@@ -111,7 +114,39 @@
 					</div>
 				</main>
 			</div>
+
+			<div id="waitlist-res-view" class="hidden">
+				<main class="main-content">
+					<div class="panel">
+						<h2>
+							Вайтлист (Результаты) (<span id="waitlist-res-count">0</span>)
+						</h2>
+						<div class="actions">
+							<button id="refresh-waitlist-res">Обновить список</button>
+							<button id="clear-waitlist-res" class="danger">
+								Очистить всех
+							</button>
+						</div>
+						<div class="table-container">
+							<table id="waitlist-res-table">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Wallet</th>
+										<th>Результат</th>
+										<th>Проверен?</th>
+										<th>Проверен в</th>
+										<th>Действия</th>
+									</tr>
+								</thead>
+								<tbody id="waitlist-res-body"></tbody>
+							</table>
+						</div>
+					</div>
+				</main>
+			</div>
 		</div>
+
 		<script src="script.js"></script>
 	</body>
 </html>
